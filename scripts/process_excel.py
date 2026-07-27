@@ -56,7 +56,7 @@ for idx, row in df_form.iterrows():
         bairro = "Jardim São Sebastião"
         lat = -21.384556
         lng = -48.495396
-        final_link_fotos = "https://maps.app.goo.gl/bL7oJCt5oQ9SS4Fi7"
+        final_link_fotos = "https://photos.app.goo.gl/JMSJy1nzX9ajbdpp8"
 
     status = "concluido" if final_link_fotos != "" else "pendente"
     query_map = f"{nome_raw}, {endereco}".replace(" ", "+")
