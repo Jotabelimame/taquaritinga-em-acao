@@ -1,169 +1,78 @@
 import os
 import json
-import re
 import pandas as pd
 from datetime import datetime
+import re
 
 EXCEL_PATH = r"C:\Users\JOTABELIMA\Documents\New project\outputs\019fa346-e115-76d2-91ac-5d44619f1acc\planilha_vendaval_fotos.xlsx"
 SITE_DIR = r"C:\Users\JOTABELIMA\Documents\New project\site-taquaritinga"
 DADOS_DIR = os.path.join(SITE_DIR, "dados")
-SCRIPTS_DIR = os.path.join(SITE_DIR, "scripts")
+JSON_PATH = os.path.join(DADOS_DIR, "locais.json")
+HTML_PATH = os.path.join(SITE_DIR, "index.html")
 
-os.makedirs(DADOS_DIR, exist_ok=True)
-os.makedirs(SCRIPTS_DIR, exist_ok=True)
+# 1. Carregar JSON atual se existir para PRESERVAR fotos e edições já salvas
+existing_map = {}
+if os.path.exists(JSON_PATH):
+    with open(JSON_PATH, "r", encoding="utf-8") as f:
+        existing_data = json.load(f)
+        for l in existing_data.get("locais", []):
+            existing_map[l["id"]] = l
+            existing_map[l["nome"].lower().strip()] = l
 
 xls = pd.ExcelFile(EXCEL_PATH)
 df_form = pd.read_excel(EXCEL_PATH, sheet_name="Formulario Links Albuns")
-df_pastas = pd.read_excel(EXCEL_PATH, sheet_name="Pastas da Pasta")
-df_pdf = pd.read_excel(EXCEL_PATH, sheet_name="Já planilhados PDF")
-df_reg = pd.read_excel(EXCEL_PATH, sheet_name="Registro")
-
-def clean_str(val):
-    if pd.isna(val) or val is None:
-        return ""
-    s = str(val).strip()
-    if s.upper() == "PREENCHER" or s.lower() == "nan" or s.lower() == "null":
-        return ""
-    return s
-
-KNOWN_LOCATIONS = {
-    "emeb estevam schlobach salvagni": {
-        "endereco": "EMEB Dr. Estevam Schlobach Salvagni - Taquaritinga/SP",
-        "bairro": "Vila Esperança",
-        "lat": -21.4022, "lng": -48.5110
-    },
-    "recapex marrangni": {
-        "endereco": "Rua Theodoro Davoglio, 400 - Setor Industrial",
-        "bairro": "Setor Industrial",
-        "lat": -21.4150, "lng": -48.4980
-    },
-    "av. paulo roberto scandar": {
-        "endereco": "Av. Paulo Roberto Scandar, Centro",
-        "bairro": "Centro / Vila Nova",
-        "lat": -21.4080, "lng": -48.5030
-    },
-    "av. vicente josé parise": {
-        "endereco": "Av. Vicente José Parise, Centro",
-        "bairro": "Centro",
-        "lat": -21.4040, "lng": -48.5060
-    },
-    "av.mario da silva camargo": {
-        "endereco": "Av. Mário da Silva Camargo",
-        "bairro": "Pq. Res. Laranjeiras II",
-        "lat": -21.4120, "lng": -48.5180
-    },
-    "conj. hab. dr. adail nunes da silva": {
-        "endereco": "Conjunto Habitacional Dr. Adail Nunes da Silva",
-        "bairro": "Dr. Adail Nunes da Silva",
-        "lat": -21.3980, "lng": -48.5220
-    },
-    "praça guilherme josé franco": {
-        "endereco": "Praça Guilherme José Franco, 70-677",
-        "bairro": "Centro",
-        "lat": -21.4061, "lng": -48.5042
-    },
-    "guariroba distrito": {
-        "endereco": "Distrito de Guariroba - Taquaritinga/SP",
-        "bairro": "Guariroba",
-        "lat": -21.3500, "lng": -48.5800
-    },
-    "av.heitor alves gomes": {
-        "endereco": "Av. Heitor Alves Gomes, s/n",
-        "bairro": "Jd. Vale do Sol",
-        "lat": -21.4190, "lng": -48.5100
-    },
-    "berçario anunciata colombo": {
-        "endereco": "Berçário Anunciata Colombo, Taquaritinga/SP",
-        "bairro": "Vila Esperança",
-        "lat": -21.4010, "lng": -48.5090
-    },
-    "clube do funcionario publico da prefeitura": {
-        "endereco": "Clube do Funcionário Público Municipal",
-        "bairro": "Jardim das Laranjeiras",
-        "lat": -21.4130, "lng": -48.5150
-    },
-    "comite da prefeitura": {
-        "endereco": "Comitê Central de Crise - Prefeitura Municipal",
-        "bairro": "Centro",
-        "lat": -21.4060, "lng": -48.5050
-    }
-}
 
 locais_list = []
 id_counter = 1
 
 for idx, row in df_form.iterrows():
-    nome_raw = clean_str(row.get("Pasta / local"))
-    if not nome_raw:
+    nome_raw = str(row.get("Pasta / local", "")).strip()
+    if not nome_raw or nome_raw.lower() == "nan":
         continue
     
-    link_fotos = clean_str(row.get("Cole aqui o link do álbum Google Fotos"))
-    if not link_fotos:
-        link_fotos = clean_str(row.get("Abrir álbum"))
+    # Verificar se já existia no JSON com fotos ou coordenadas calibradas
+    key_id = id_counter
+    key_name = nome_raw.lower()
+    prev = existing_map.get(key_id) or existing_map.get(key_name)
     
-    nome_lower = nome_raw.lower().strip()
+    # Link de fotos na planilha
+    link_fotos_excel = str(row.get("Cole aqui o link do álbum Google Fotos", "")).strip()
+    if link_fotos_excel.upper() == "PREENCHER" or link_fotos_excel.lower() == "nan":
+        link_fotos_excel = ""
+        
+    # Preservar fotos anteriores se já salvas no JSON
+    final_link_fotos = link_fotos_excel if link_fotos_excel else (prev.get("linkFotos", "") if prev else "")
     
-    known_info = None
-    for k, v in KNOWN_LOCATIONS.items():
-        if k in nome_lower or nome_lower in k:
-            known_info = v
-            break
-            
-    pdf_match = None
-    for _, pdf_row in df_pdf.iterrows():
-        p_corr = clean_str(pdf_row.get("Possível pasta correspondente")).lower()
-        p_local = clean_str(pdf_row.get("Local")).lower()
-        if (p_corr and p_corr in nome_lower) or (p_local and nome_lower in p_local):
-            pdf_match = pdf_row
-            break
-            
-    reg_match = None
-    for _, reg_row in df_reg.iterrows():
-        r_file = clean_str(reg_row.get("Nome do arquivo da foto")).lower()
-        r_end = clean_str(reg_row.get("Endereço completo")).lower()
-        if (r_file and r_file in nome_lower) or (r_end and r_end in nome_lower):
-            reg_match = reg_row
-            break
+    # Preservar coordenadas e endereço se já salvos no JSON
+    lat = prev.get("lat") if prev else round(-21.4056 + ((id_counter % 9) - 4) * 0.0035, 6)
+    lng = prev.get("lng") if prev else round(-48.5047 + (((id_counter * 3) % 11) - 5) * 0.0038, 6)
+    endereco = prev.get("endereco") if prev else f"{nome_raw} - Taquaritinga/SP"
+    bairro = prev.get("bairro") if prev else "Taquaritinga/SP"
+    
+    # Caso especial Anunciata Colombo (Creche #1)
+    if id_counter == 1 or "anunciata" in nome_raw.lower():
+        nome_raw = "EMEB / Berçário Anunciata Colombo"
+        endereco = "Rua Salvador Arnoni, 159 - Jardim São Sebastião, Taquaritinga - SP, 15903-112"
+        bairro = "Jardim São Sebastião"
+        lat = -21.384556
+        lng = -48.495396
+        final_link_fotos = "https://maps.app.goo.gl/bL7oJCt5oQ9SS4Fi7"
 
-    endereco = ""
-    bairro = "Taquaritinga/SP"
-    lat = None
-    lng = None
-
-    if known_info is not None:
-        endereco = known_info["endereco"]
-        bairro = known_info["bairro"]
-        lat = known_info["lat"]
-        lng = known_info["lng"]
-    elif pdf_match is not None and clean_str(pdf_match.get("Endereço")):
-        endereco = clean_str(pdf_match.get("Endereço"))
-    elif reg_match is not None and clean_str(reg_match.get("Endereço completo")):
-        endereco = clean_str(reg_match.get("Endereço completo"))
-        if clean_str(reg_match.get("Bairro")):
-            bairro = clean_str(reg_match.get("Bairro"))
-
-    if not endereco:
-        endereco = f"{nome_raw.strip()} - Taquaritinga/SP"
-
-    if lat is None or lng is None:
-        lat = round(-21.4056 + ((id_counter % 9) - 4) * 0.0035 + ((id_counter % 5) - 2) * 0.0012, 6)
-        lng = round(-48.5047 + (((id_counter * 3) % 11) - 5) * 0.0038 + ((id_counter % 4) - 2) * 0.0015, 6)
-
-    query = f"{nome_raw}, {endereco}, Taquaritinga SP".replace(" ", "+")
-    link_maps = f"https://www.google.com/maps/search/?api=1&query={query}"
-
-    status = "concluido" if link_fotos != "" else "pendente"
+    status = "concluido" if final_link_fotos != "" else "pendente"
+    query_map = f"{nome_raw}, {endereco}".replace(" ", "+")
+    link_maps = f"https://www.google.com/maps/search/?api=1&query={query_map}"
 
     locais_list.append({
         "id": id_counter,
-        "nome": nome_raw.strip(),
+        "nome": nome_raw,
         "endereco": endereco,
         "bairro": bairro,
         "lat": lat,
         "lng": lng,
         "status": status,
         "linkMaps": link_maps,
-        "linkFotos": link_fotos,
+        "linkFotos": final_link_fotos,
+        "fotos": final_link_fotos,
         "dataAtendimento": "27/07/2026"
     })
     id_counter += 1
@@ -177,15 +86,31 @@ json_output = {
     "total_locais": total_locais,
     "total_concluidos": total_concluidos,
     "total_pendentes": total_pendentes,
-    "locais": locais_list
+    "locais": locais_list,
+    "rotas": existing_data.get("rotas", []) if "existing_data" in locals() else []
 }
 
-json_path = os.path.join(DADOS_DIR, "locais.json")
-with open(json_path, "w", encoding="utf-8") as f:
+with open(JSON_PATH, "w", encoding="utf-8") as f:
     json.dump(json_output, f, ensure_ascii=False, indent=2)
 
-print("=== PROCESSAMENTO CONCLUÍDO ===")
+# Atualizar index.html
+with open(HTML_PATH, "r", encoding="utf-8") as f:
+    html_text = f.read()
+
+json_full_str = json.dumps(json_output, ensure_ascii=False, indent=2)
+
+new_html = re.sub(
+    r"const initialData = \{.*?\};\n    let rawLocaisData =",
+    f"const initialData = {json_full_str};\n    let rawLocaisData =",
+    html_text,
+    flags=re.DOTALL
+)
+
+with open(HTML_PATH, "w", encoding="utf-8") as f:
+    f.write(new_html)
+
+print("=== PROCESSAMENTO INTELIGENTE CONCLUÍDO ===")
 print(f"Total locais: {total_locais}")
 print(f"Concluídos: {total_concluidos}")
 print(f"Pendentes: {total_pendentes}")
-print(f"Arquivo JSON gerado com sucesso em: {json_path}")
+print("Todas as fotos e coordenadas salvas foram preservadas com sucesso!")
