@@ -6,13 +6,13 @@
   "locais": [
     {
       "id": 1,
-      "nome": "berçario Anunciata Colombo",
-      "endereco": "Berçário Anunciata Colombo, Vila Esperança, Taquaritinga - SP",
-      "bairro": "Vila Esperança",
-      "lat": -21.401,
-      "lng": -48.509,
+      "nome": "EMEB / Berçário Anunciata Colombo",
+      "endereco": "Rua Salvador Arnoni, 159 - Jardim São Sebastião, Taquaritinga - SP, 15903-112",
+      "bairro": "Jardim São Sebastião",
+      "lat": -21.384556,
+      "lng": -48.495396,
       "status": "pendente",
-      "linkMaps": "https://www.google.com/maps/search/?api=1&query=berçario+Anunciata+Colombo+Taquaritinga+SP",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=Rua+Salvador+Arnoni+159+Taquaritinga+SP",
       "linkFotos": "",
       "dataAtendimento": "27/07/2026"
     },
