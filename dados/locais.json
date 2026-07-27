@@ -15,7 +15,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=Rua+Salvador+Arnoni+159+Taquaritinga+SP",
       "linkFotos": "https://photos.app.goo.gl/JMSJy1nzX9ajbdpp8",
       "fotos": "https://photos.app.goo.gl/JMSJy1nzX9ajbdpp8",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 2,
@@ -28,7 +30,9 @@
       "linkMaps": "https://maps.app.goo.gl/z2FN85uoQDLSHSmW8",
       "linkFotos": "https://photos.app.goo.gl/nx1uPz13BJmPBHEi6",
       "fotos": "https://photos.app.goo.gl/nx1uPz13BJmPBHEi6",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 3,
@@ -41,7 +45,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=Guariroba+distrito,+Distrito+de+Guariroba+-+Taquaritinga/SP",
       "linkFotos": "",
       "fotos": "",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 4,
@@ -54,7 +60,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=recapex+marragni,+recapex+marragni+-+Taquaritinga/SP",
       "linkFotos": "",
       "fotos": "",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 5,
@@ -67,7 +75,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=Residencias+atingidas+vendaval,+Taquaritinga+-+SP,+Residencias+atingidas+vendaval,+Taquaritinga+-+SP+-+Taquaritinga/SP",
       "linkFotos": "",
       "fotos": "",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 6,
@@ -80,7 +90,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=Av.+Paulo+Roberto+Scandar,+Av.+Paulo+Roberto+Scandar+-+Centro/Vila+Nova+-+CEP+15900-001",
       "linkFotos": "https://photos.app.goo.gl/ZJMuSzKDzQnzfDX1A",
       "fotos": "https://photos.app.goo.gl/ZJMuSzKDzQnzfDX1A",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 7,
@@ -93,7 +105,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=Av.+Vicente+José+Parise,+Av.+Vicente+José+Parise+-+Centro+-+CEP+15900-000",
       "linkFotos": "https://photos.app.goo.gl/DoyFymckr14T448c9",
       "fotos": "https://photos.app.goo.gl/DoyFymckr14T448c9",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 8,
@@ -106,7 +120,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=av.Admo+Lui,+av.Admo+Lui+-+Taquaritinga/SP",
       "linkFotos": "",
       "fotos": "",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 9,
@@ -119,7 +135,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=av.Caetano+Decaro,+av.Caetano+Decaro+-+Taquaritinga/SP",
       "linkFotos": "",
       "fotos": "",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 10,
@@ -132,7 +150,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=av.Calil+Jose+Dib,+av.Calil+Jose+Dib+-+Taquaritinga/SP",
       "linkFotos": "",
       "fotos": "",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 11,
@@ -145,7 +165,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=av.Celso+Ferreira+de+Camargo,+av.Celso+Ferreira+de+Camargo+-+Taquaritinga/SP",
       "linkFotos": "",
       "fotos": "",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 12,
@@ -158,7 +180,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=av.Heitor+Alves+Gomes,+Av.+Heitor+Alves+Gomes,+s/n",
       "linkFotos": "",
       "fotos": "",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 13,
@@ -171,7 +195,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=av.Joao+Perissinoti++ginasio+de+esporte,+av.Joao+Perissinoti++ginasio+de+esporte+-+Taquaritinga/SP",
       "linkFotos": "",
       "fotos": "",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 14,
@@ -184,7 +210,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=Av.Mario+da+Silva+Camargo,+Av.+Mário+da+Silva+Camargo",
       "linkFotos": "",
       "fotos": "",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 15,
@@ -197,7 +225,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=av.Paulo+Zupanni,+av.Paulo+Zupanni+-+Taquaritinga/SP",
       "linkFotos": "",
       "fotos": "",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 16,
@@ -210,7 +240,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=bairro+Talavasso+UBS+vale+do+sol,+bairro+Talavasso+UBS+vale+do+sol+-+Taquaritinga/SP",
       "linkFotos": "",
       "fotos": "",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": false,
+      "reservado": true
     },
     {
       "id": 17,
@@ -223,7 +255,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=Conj.+Hab.+Dr.+Adail+Nunes+da+Silva,+Conj.+Hab.+Dr.+Adail+Nunes+da+Silva+-+CEP+15903-130/166",
       "linkFotos": "https://photos.app.goo.gl/CnxBj426CBxfnVev9",
       "fotos": "https://photos.app.goo.gl/CnxBj426CBxfnVev9",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 18,
@@ -236,7 +270,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=dashboard,+dashboard+-+Taquaritinga/SP",
       "linkFotos": "",
       "fotos": "",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 19,
@@ -249,7 +285,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=EMEB+Estevam+Schlobach+Salvagni,+EMEB+Dr.+Estevam+Schlobach+Salvagni+-+Taquaritinga/SP",
       "linkFotos": "",
       "fotos": "",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 20,
@@ -262,7 +300,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=EMEB+Mathilde+Menon,+EMEB+Mathilde+Menon+-+Taquaritinga/SP",
       "linkFotos": "",
       "fotos": "",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 21,
@@ -275,7 +315,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=Emilio+Giroto,+Emilio+Giroto+-+Taquaritinga/SP",
       "linkFotos": "",
       "fotos": "",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 22,
@@ -288,7 +330,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=Escola+Municipal+Professor+Modesto+Bohrer,+Escola+Municipal+Professor+Modesto+Bohrer+-+Taquaritinga/SP",
       "linkFotos": "",
       "fotos": "",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 23,
@@ -301,7 +345,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=escola+Santa+Cecilia++ETAM,+escola+Santa+Cecilia++ETAM+-+Taquaritinga/SP",
       "linkFotos": "",
       "fotos": "",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 24,
@@ -314,7 +360,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=francisco+romano,+francisco+romano+-+Taquaritinga/SP",
       "linkFotos": "",
       "fotos": "",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 25,
@@ -327,7 +375,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=general+Osorio++igreja+matriz,+general+Osorio++igreja+matriz+-+Taquaritinga/SP",
       "linkFotos": "",
       "fotos": "",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 26,
@@ -340,7 +390,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=Josephina+mantese+morcelli+pinsetta,+Josephina+mantese+morcelli+pinsetta+-+Taquaritinga/SP",
       "linkFotos": "",
       "fotos": "",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 27,
@@ -353,7 +405,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=Organizado_Por_Endereco,+Organizado_Por_Endereco+-+Taquaritinga/SP",
       "linkFotos": "",
       "fotos": "",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 28,
@@ -366,7 +420,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=Parque+Vinicus+de+morares+UBS+Neoseti,+Parque+Vinicus+de+morares+UBS+Neoseti+-+Taquaritinga/SP",
       "linkFotos": "",
       "fotos": "",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": false,
+      "reservado": true
     },
     {
       "id": 29,
@@ -379,7 +435,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=passarela+rua+doutor+jose+miguel+joao,+passarela+rua+doutor+jose+miguel+joao+-+Taquaritinga/SP",
       "linkFotos": "",
       "fotos": "",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 30,
@@ -392,7 +450,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=posto+de+saude+paraiso+nelson+sargi,+posto+de+saude+paraiso+nelson+sargi+-+Taquaritinga/SP",
       "linkFotos": "",
       "fotos": "",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 31,
@@ -405,7 +465,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=praça+Edwil+Roncada,+praça+Edwil+Roncada+-+Taquaritinga/SP",
       "linkFotos": "",
       "fotos": "",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 32,
@@ -418,7 +480,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=Praça+Guilherme+José+Franco,+Praça+Guilherme+José+Franco,+70-677+-+Centro+-+CEP+15900-000",
       "linkFotos": "https://photos.app.goo.gl/LgNKd7JbHKCTycjK7",
       "fotos": "https://photos.app.goo.gl/LgNKd7JbHKCTycjK7",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 33,
@@ -431,7 +495,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=Praça+Horacio+Ramalho,+Praça+Horacio+Ramalho+-+Taquaritinga/SP",
       "linkFotos": "",
       "fotos": "",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 34,
@@ -444,7 +510,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=Praça+Horacio+Ramalho+camara+Municiapal,+Praça+Horacio+Ramalho+camara+Municiapal+-+Taquaritinga/SP",
       "linkFotos": "",
       "fotos": "",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 35,
@@ -457,7 +525,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=praça+sr.waldemar+de+Ambrosio,+praça+sr.waldemar+de+Ambrosio+-+Taquaritinga/SP",
       "linkFotos": "",
       "fotos": "",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 36,
@@ -470,7 +540,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=R.+Alfi+Olyntho+Cucolicchio+-+Jardim+Vale+do+Sol,,+R.+Alfi+Olyntho+Cucolicchio+-+Jardim+Vale+do+Sol,+-+Taquaritinga/SP",
       "linkFotos": "",
       "fotos": "",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 37,
@@ -483,7 +555,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=R.+Angelo+Bossine+Neto,+R.+Angelo+Bossine+Neto+-+Taquaritinga/SP",
       "linkFotos": "",
       "fotos": "",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 38,
@@ -496,7 +570,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=R.+Antenor+Milanezi,+488-538+-+Jardim+Vale+do+Sol,+Taquaritinga+-+SP,+R.+Antenor+Milanezi,+488-538+-+Jardim+Vale+do+Sol,+Taquaritinga+-+SP+-+Taquaritinga/SP",
       "linkFotos": "",
       "fotos": "",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 39,
@@ -509,7 +585,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=R.+Bernardino+Sampaio,+580+-+Vila+Sargi,+R.+Bernardino+Sampaio,+580+-+Vila+Sargi+-+Taquaritinga/SP",
       "linkFotos": "",
       "fotos": "",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 40,
@@ -522,7 +600,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=R.+Cel.+Gustavo+A+de+Moraes,,+R.+Cel.+Gustavo+A+de+Moraes,+-+Taquaritinga/SP",
       "linkFotos": "",
       "fotos": "",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 41,
@@ -535,7 +615,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=R.+Dr.+Argidio+Prevideli,+2-92+-+Taquaritinga,+SP,+R.+Dr.+Argidio+Prevideli,+2-92+-+Taquaritinga,+SP+-+Taquaritinga/SP",
       "linkFotos": "",
       "fotos": "",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 42,
@@ -548,7 +630,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=R.+Luiz+Patti,+2-160+-+Taquaritinga,+SP,++Taquaritinga+-+SP,+R.+Luiz+Patti,+2-160+-+Taquaritinga,+SP,++Taquaritinga+-+SP+-+Taquaritinga/SP",
       "linkFotos": "",
       "fotos": "",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 43,
@@ -561,7 +645,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=R.+Luís+Benaglia,,+R.+Luís+Benaglia,+-+Taquaritinga/SP",
       "linkFotos": "",
       "fotos": "",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 44,
@@ -574,7 +660,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=R.Cesar+Rossi-+Taquaritinga,+SP,++Taquaritinga+-+SP,+R.Cesar+Rossi-+Taquaritinga,+SP,++Taquaritinga+-+SP+-+Taquaritinga/SP",
       "linkFotos": "",
       "fotos": "",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 45,
@@ -587,7 +675,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=R.DR.Benjamin+FG+Neto-+Taquaritinga,+SP,++Taquaritinga+-+SP,+R.DR.Benjamin+FG+Neto-+Taquaritinga,+SP,++Taquaritinga+-+SP+-+Taquaritinga/SP",
       "linkFotos": "",
       "fotos": "",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 46,
@@ -600,7 +690,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=R.General+Glicerio,+R.General+Glicerio+-+Taquaritinga/SP",
       "linkFotos": "",
       "fotos": "",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 47,
@@ -613,7 +705,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=rodoviaria,+rodoviaria+-+Taquaritinga/SP",
       "linkFotos": "",
       "fotos": "",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 48,
@@ -626,7 +720,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=rua+Bernadino+Samapaio,+rua+Bernadino+Samapaio+-+Taquaritinga/SP",
       "linkFotos": "",
       "fotos": "",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 49,
@@ -639,7 +735,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=rua+dos+Domingues-Taquaritinga+SP,+rua+dos+Domingues-Taquaritinga+SP+-+Taquaritinga/SP",
       "linkFotos": "",
       "fotos": "",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 50,
@@ -652,7 +750,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=rua+doutor+Jorge+Tibiriça,+rua+doutor+Jorge+Tibiriça+-+Taquaritinga/SP",
       "linkFotos": "",
       "fotos": "",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 51,
@@ -665,7 +765,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=rua+Jamil+Jose+jd+Paineira,+rua+Jamil+Jose+jd+Paineira+-+Taquaritinga/SP",
       "linkFotos": "",
       "fotos": "",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 52,
@@ -678,7 +780,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=rua+José+Maria+gonçalves,+rua+José+Maria+gonçalves+-+Taquaritinga/SP",
       "linkFotos": "",
       "fotos": "",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 53,
@@ -691,7 +795,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=sp+319,+sp+319+-+Taquaritinga/SP",
       "linkFotos": "",
       "fotos": "",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 54,
@@ -704,7 +810,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=Vicente+Jose+Parise,+Vicente+Jose+Parise+-+Taquaritinga/SP",
       "linkFotos": "",
       "fotos": "",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 55,
@@ -717,7 +825,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=videos+mp4,+videos+mp4+-+Taquaritinga/SP",
       "linkFotos": "",
       "fotos": "",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 56,
@@ -730,7 +840,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=vila+são+sebastião,+vila+são+sebastião+-+Taquaritinga/SP",
       "linkFotos": "",
       "fotos": "",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 57,
@@ -743,7 +855,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=visita+do+dep+estadual+do+estado+a+Taquaritinga+-+SP,+visita+do+dep+estadual+do+estado+a+Taquaritinga+-+SP+-+Taquaritinga/SP",
       "linkFotos": "",
       "fotos": "",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 58,
@@ -756,7 +870,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=visita+do+vice+gov+do+estado+a+Taquaritinga+-+SP,+visita+do+vice+gov+do+estado+a+Taquaritinga+-+SP+-+Taquaritinga/SP",
       "linkFotos": "",
       "fotos": "",
-      "dataAtendimento": "27/07/2026"
+      "dataAtendimento": "27/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 59,
@@ -769,7 +885,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=EMEB+Dr.+Estevam+Schlobach+Salvagni,+R.+Cel.+Gustavo+A.+de+Moraes,+1704+-+Vila+Esperança+-+CEP+15900-000",
       "linkFotos": "https://photos.app.goo.gl/i6pCatFeZ3KNjrMK9",
       "fotos": "https://photos.app.goo.gl/i6pCatFeZ3KNjrMK9",
-      "dataAtendimento": "26/07/2026"
+      "dataAtendimento": "26/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 60,
@@ -782,7 +900,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=Distrito+de+Guariroba,+Distrito+de+Guariroba+-+Taquaritinga/SP+-+CEP+15900-000",
       "linkFotos": "https://photos.app.goo.gl/2wWme9DCJPBdJyZM6",
       "fotos": "https://photos.app.goo.gl/2wWme9DCJPBdJyZM6",
-      "dataAtendimento": "26/07/2026"
+      "dataAtendimento": "26/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 61,
@@ -795,7 +915,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=Residências+Atingidas,+Residências+Atingidas+Vendaval+-+Taquaritinga/SP+-+CEP+15900-000",
       "linkFotos": "https://photos.app.goo.gl/cvmhGtEaN2Tvc2Tw8",
       "fotos": "https://photos.app.goo.gl/cvmhGtEaN2Tvc2Tw8",
-      "dataAtendimento": "26/07/2026"
+      "dataAtendimento": "26/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 62,
@@ -808,7 +930,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=Clube+da+Assoc.+dos+Func.+Públicos,+Av.+Francisco+e+Manuel+Penteado,+171+-+Conj.+Hab.+Manoel+Lopes+Moreno+-+CEP+15900-000",
       "linkFotos": "https://photos.app.goo.gl/TSftLsucvZLWmLCp6",
       "fotos": "https://photos.app.goo.gl/TSftLsucvZLWmLCp6",
-      "dataAtendimento": "26/07/2026"
+      "dataAtendimento": "26/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 63,
@@ -821,7 +945,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=Recapex+Marangoni,+R.+Theodoro+Davoglio,+400+-+Setor+Industrial+-+CEP+15900-000",
       "linkFotos": "https://photos.app.goo.gl/yg4eRxLRCuXXXXUT9",
       "fotos": "https://photos.app.goo.gl/yg4eRxLRCuXXXXUT9",
-      "dataAtendimento": "26/07/2026"
+      "dataAtendimento": "26/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 64,
@@ -834,7 +960,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=Av.+Mário+da+Silva+Camargo,+Av.+Mário+da+Silva+Camargo+-+Pq.+Res.+Laranjeiras+II+-+CEP+15904-166",
       "linkFotos": "https://photos.app.goo.gl/nMXoz7drUgEPrVZp9",
       "fotos": "https://photos.app.goo.gl/nMXoz7drUgEPrVZp9",
-      "dataAtendimento": "26/07/2026"
+      "dataAtendimento": "26/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 65,
@@ -847,7 +975,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=Casa+Terazzi,+R.+José+Lourenço+Machado,+62+-+Jd.+Ribeirãozinho+-+CEP+15901-096",
       "linkFotos": "https://photos.app.goo.gl/Kc1GbYHQkSjsuymKA",
       "fotos": "https://photos.app.goo.gl/Kc1GbYHQkSjsuymKA",
-      "dataAtendimento": "26/07/2026"
+      "dataAtendimento": "26/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     },
     {
       "id": 66,
@@ -860,7 +990,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=UBS+II+Ederaldo+A.+P.+Marques,+Av.+Heitor+Alves+Gomes,+s/nº+-+Jd.+Vale+do+Sol+-+CEP+15904-056",
       "linkFotos": "https://photos.app.goo.gl/fYJ5x9QDgmHmSajx5",
       "fotos": "https://photos.app.goo.gl/fYJ5x9QDgmHmSajx5",
-      "dataAtendimento": "26/07/2026"
+      "dataAtendimento": "26/07/2026",
+      "exibirNoSite": false,
+      "reservado": true
     },
     {
       "id": 67,
@@ -873,7 +1005,9 @@
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=Comitê+de+Crise+da+Prefeitura,+R.+Romeu+Mársico,+200+-+Centro+-+CEP+15900-000",
       "linkFotos": "https://photos.app.goo.gl/WTVQgcxGrK2UgjCh8",
       "fotos": "https://photos.app.goo.gl/WTVQgcxGrK2UgjCh8",
-      "dataAtendimento": "26/07/2026"
+      "dataAtendimento": "26/07/2026",
+      "exibirNoSite": true,
+      "reservado": false
     }
   ],
   "rotas": [
@@ -971,5 +1105,8 @@
         "Recapex Marangoni"
       ]
     }
-  ]
+  ],
+  "total_locais_publicos": 64,
+  "total_concluidos_publicos": 14,
+  "total_pendentes_publicos": 50
 }
