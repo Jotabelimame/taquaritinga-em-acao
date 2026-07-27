@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel de Administração & Auditoria GPS - Vendaval Taquaritinga/SP</title>
+  <meta name="description" content="Painel de gestão, inserção de fotos e auditoria de coordenadas GPS dos locais atingidos pelo vendaval em Taquaritinga/SP.">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+
+  <!-- Target Mode CSS -->
+  <link rel="stylesheet" href="scripts/target-mode.css">
+
+  <style>
+    :root {
+      --primary: #0284c7;
+      --primary-dark: #0369a1;
+      --secondary: #10b981;
+      --secondary-dark: #059669;
+      --accent: #f59e0b;
+      --danger: #ef4444;
+      --bg-slate: #0f172a;
+      --card-bg: #1e293b;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: #334155;
+      --radius: 12px;
+      --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-slate);
+      color: var(--text-main);
+      line-height: 1.6;
+      padding-bottom: 60px;
+    }
+
+    h1, h2, h3, h4 { font-family: 'Outfit', sans-serif; }
+
+    header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0369a1 100%);
+      padding: 30px 20px;
+      border-bottom: 1px solid var(--border-color);
+      box-shadow: var(--shadow);
+    }
+
+    .header-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .header-title h1 {
+      font-size: 1.8rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .header-title p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-success { background: var(--secondary); color: white; }
+    .btn-success:hover { background: var(--secondary-dark); }
+    .btn-secondary { background: #334155; color: var(--text-main); }
+    .btn-secondary:hover { background: #475569; }
+    .btn-outline { background: transparent; border: 1px solid var(--border-color); color: var(--text-main); }
+    .btn-outline:hover { background: #334155; }
+
+    .container {
+      max-width: 1300px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+
+    /* Stats bar */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .stat-card i {
+      font-size: 2rem;
+    }
+
+    .stat-val { font-size: 1.6rem; font-weight: 800; }
+    .stat-lbl { color: var(--text-muted); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; }
+
+    /* Controls bar */
+    .controls-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      margin-bottom: 24px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .search-box {
+      flex: 1;
+      min-width: 260px;
+      position: relative;
+    }
+
+    .search-box i {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 10px 14px 10px 40px;
+      background: #0f172a;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      color: white;
+      outline: none;
+    }
+
+    .filter-group {
+      display: flex;
+      gap: 8px;
+    }
+
+    .filter-btn {
+      padding: 8px 14px;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      background: #0f172a;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .filter-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    /* Table Container */
+    .table-container {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      overflow-x: auto;
+      box-shadow: var(--shadow);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+
+    th {
+      background: #0f172a;
+      padding: 14px 16px;
+      color: var(--text-muted);
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border-color);
+      vertical-align: middle;
+    }
+
+    tr:hover { background: rgba(255, 255, 255, 0.02); }
+
+    .status-badge {
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .status-badge.concluido { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
+    .status-badge.pendente { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
+
+    .actions-cell {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-sm {
+      padding: 6px 10px;
+      font-size: 0.8rem;
+      border-radius: 6px;
+    }
+
+    /* Modal Styling */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      width: 90%;
+      max-width: 850px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal-header {
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-body {
+      padding: 24px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    @media(max-width: 768px) {
+      .modal-body { grid-template-columns: 1fr; }
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 10px 12px;
+      background: #0f172a;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      color: white;
+      font-size: 0.9rem;
+      outline: none;
+    }
+
+    .form-group input:focus { border-color: var(--primary); }
+
+    .modal-map-container {
+      height: 280px;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+      margin-top: 6px;
+    }
+
+    #modalMap { height: 100%; width: 100%; }
+
+    .modal-footer {
+      padding: 16px 24px;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="header-container">
+      <div class="header-title">
+        <h1><i class="fa-solid fa-sliders" style="color: var(--primary);"></i> Painel de Administração & Auditoria GPS</h1>
+        <p>Gestão de locais, cadastro de fotos do Google Fotos e calibração fina de mapa para Taquaritinga/SP.</p>
+      </div>
+
+      <div class="header-actions">
+        <a href="index.html" class="btn btn-outline">
+          <i class="fa-solid fa-arrow-left"></i> Voltar ao Site Público
+        </a>
+        <button class="btn btn-success" onclick="openNewModal()">
+          <i class="fa-solid fa-plus"></i> Novo Local
+        </button>
+        <button class="btn btn-primary" onclick="exportJSON()">
+          <i class="fa-solid fa-download"></i> Exportar locais.json
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Container Principal -->
+  <main class="container">
+
+    <!-- Stats Bar -->
+    <div class="stats-bar">
+      <div class="stat-card">
+        <i class="fa-solid fa-location-dot" style="color: #38bdf8;"></i>
+        <div>
+          <div class="stat-val" id="stat-total">62</div>
+          <div class="stat-lbl">Total de Locais</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <i class="fa-solid fa-circle-check" style="color: #34d399;"></i>
+        <div>
+          <div class="stat-val" id="stat-concluidos">0</div>
+          <div class="stat-lbl">Com Fotos (Atendidos)</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <i class="fa-solid fa-clock" style="color: #fbbf24;"></i>
+        <div>
+          <div class="stat-val" id="stat-pendentes">62</div>
+          <div class="stat-lbl">Pendentes / Em Vistoria</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Controls Bar -->
+    <div class="controls-card">
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="searchInput" placeholder="Buscar por local, rua ou bairro para auditoria..." oninput="renderTable()">
+      </div>
+
+      <div class="filter-group">
+        <button class="filter-btn active" data-filter="todos" onclick="setFilter('todos', this)">Todos</button>
+        <button class="filter-btn" data-filter="concluido" onclick="setFilter('concluido', this)">Concluídos</button>
+        <button class="filter-btn" data-filter="pendente" onclick="setFilter('pendente', this)">Pendentes</button>
+      </div>
+    </div>
+
+    <!-- Table Container -->
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 50px;">ID</th>
+            <th>Local / Nome</th>
+            <th>Endereço & Bairro</th>
+            <th>Coordenadas GPS (Lat, Lng)</th>
+            <th style="width: 130px;">Status</th>
+            <th style="width: 170px; text-align: right;">Ações</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <!-- Rendered via JS -->
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- Modal Edit / Audit -->
+  <div class="modal-overlay" id="editModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modalTitle"><i class="fa-solid fa-pen-to-square"></i> Editar Local & Auditória GPS</h3>
+        <button class="btn btn-outline btn-sm" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Coluna Esquerda: Formulário -->
+        <div>
+          <input type="hidden" id="editId">
+
+          <div class="form-group">
+            <label>Nome do Local / Ponto de Referência</label>
+            <input type="text" id="editNome" placeholder="Ex: EMEB Estevam Schlobach Salvagni">
+          </div>
+
+          <div class="form-group">
+            <label>Endereço Completo</label>
+            <input type="text" id="editEndereco" placeholder="Ex: Rua Cel. Gustavo A. de Moraes, Vila Esperança">
+          </div>
+
+          <div class="form-group">
+            <label>Bairro</label>
+            <input type="text" id="editBairro" placeholder="Ex: Vila Esperança">
+          </div>
+
+          <div class="form-group">
+            <label>Link do Álbum de Fotos (Google Fotos / Drive)</label>
+            <input type="url" id="editLinkFotos" placeholder="https://photos.app.goo.gl/..." oninput="autoUpdateStatus()">
+          </div>
+
+          <div class="form-group">
+            <label>Status do Atendimento</label>
+            <select id="editStatus">
+              <option value="pendente">⏳ Pendente (Em Vistoria)</option>
+              <option value="concluido">✅ Concluído (Com Fotos)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Coluna Direita: Auditoria de Coordenadas GPS + Mapa Leaflet Arrastável -->
+        <div>
+          <div style="display: flex; gap: 10px;">
+            <div class="form-group" style="flex: 1;">
+              <label>Latitude (Lat)</label>
+              <input type="number" step="any" id="editLat" onchange="updateMapFromInputs()">
+            </div>
+            <div class="form-group" style="flex: 1;">
+              <label>Longitude (Lng)</label>
+              <input type="number" step="any" id="editLng" onchange="updateMapFromInputs()">
+            </div>
+          </div>
+
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px;">
+            <i class="fa-solid fa-hand-pointer" style="color: var(--primary);"></i> Arraste o pino no mapa ou clique em qualquer ponto da rua para atualizar o GPS.
+          </p>
+
+          <div class="modal-map-container">
+            <div id="modalMap"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+        <button class="btn btn-success" onclick="saveLocal()">
+          <i class="fa-solid fa-floppy-disk"></i> Salvar Alterações
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  
+  <!-- Target Mode JS -->
+  <script src="scripts/target-mode.js"></script>
+
+  <script>
+    let locaisData = [];
+    let activeFilter = 'todos';
+    let modalMap = null;
+    let modalMarker = null;
+
+    async function loadData() {
+      try {
+        const response = await fetch('dados/locais.json');
+        if (response.ok) {
+          const data = await response.json();
+          locaisData = data.locais || [];
+        }
+      } catch (err) {
+        console.warn('Usando dados locais ou fallback.', err);
+      }
+      updateStats();
+      renderTable();
+    }
+
+    function updateStats() {
+      const total = locaisData.length;
+      const concluidos = locaisData.filter(l => l.status === 'concluido').length;
+      const pendentes = total - concluidos;
+
+      document.getElementById('stat-total').innerText = total;
+      document.getElementById('stat-concluidos').innerText = concluidos;
+      document.getElementById('stat-pendentes').innerText = pendentes;
+    }
+
+    function setFilter(filter, btn) {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeFilter = filter;
+      renderTable();
+    }
+
+    function getFilteredData() {
+      const search = document.getElementById('searchInput').value.toLowerCase().trim();
+      return locaisData.filter(l => {
+        const matchFilter = (activeFilter === 'todos') || (l.status === activeFilter);
+        const matchSearch = !search ||
+          l.nome.toLowerCase().includes(search) ||
+          l.endereco.toLowerCase().includes(search) ||
+          l.bairro.toLowerCase().includes(search);
+        return matchFilter && matchSearch;
+      });
+    }
+
+    function renderTable() {
+      const tbody = document.getElementById('tableBody');
+      const filtered = getFilteredData();
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; padding: 30px; color: var(--text-muted);">Nenhum local encontrado.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(l => `
+        <tr>
+          <td><strong>#${l.id}</strong></td>
+          <td><strong>${escapeHtml(l.nome)}</strong></td>
+          <td>${escapeHtml(l.endereco)}</td>
+          <td><span style="font-family: monospace; color: #38bdf8;">${l.lat ? l.lat.toFixed(5) : 'N/A'}, ${l.lng ? l.lng.toFixed(5) : 'N/A'}</span></td>
+          <td>
+            <span class="status-badge ${l.status}">
+              ${l.status === 'concluido' ? '<i class="fa-solid fa-check"></i> Concluído' : '<i class="fa-solid fa-clock"></i> Pendente'}
+            </span>
+          </td>
+          <td style="text-align: right;">
+            <div class="actions-cell" style="justify-content: flex-end;">
+              <button class="btn btn-primary btn-sm" onclick="openEditModal(${l.id})">
+                <i class="fa-solid fa-pen-to-square"></i> Editar & GPS
+              </button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function openEditModal(id) {
+      const loc = locaisData.find(l => l.id === id);
+      if (!loc) return;
+
+      document.getElementById('modalTitle').innerText = `Editar Local #${loc.id}`;
+      document.getElementById('editId').value = loc.id;
+      document.getElementById('editNome').value = loc.nome;
+      document.getElementById('editEndereco').value = loc.endereco;
+      document.getElementById('editBairro').value = loc.bairro || 'Taquaritinga/SP';
+      document.getElementById('editLinkFotos').value = loc.linkFotos || '';
+      document.getElementById('editStatus').value = loc.status;
+      document.getElementById('editLat').value = loc.lat || -21.4056;
+      document.getElementById('editLng').value = loc.lng || -48.5047;
+
+      document.getElementById('editModal').classList.add('active');
+      initModalMap(loc.lat || -21.4056, loc.lng || -48.5047);
+    }
+
+    function openNewModal() {
+      const nextId = locaisData.length > 0 ? Math.max(...locaisData.map(l => l.id)) + 1 : 1;
+      document.getElementById('modalTitle').innerText = `Adicionar Novo Local #${nextId}`;
+      document.getElementById('editId').value = '';
+      document.getElementById('editNome').value = '';
+      document.getElementById('editEndereco').value = '';
+      document.getElementById('editBairro').value = 'Taquaritinga/SP';
+      document.getElementById('editLinkFotos').value = '';
+      document.getElementById('editStatus').value = 'pendente';
+      document.getElementById('editLat').value = -21.4056;
+      document.getElementById('editLng').value = -48.5047;
+
+      document.getElementById('editModal').classList.add('active');
+      initModalMap(-21.4056, -48.5047);
+    }
+
+    function closeModal() {
+      document.getElementById('editModal').classList.remove('active');
+    }
+
+    function autoUpdateStatus() {
+      const link = document.getElementById('editLinkFotos').value.trim();
+      if (link !== '') {
+        document.getElementById('editStatus').value = 'concluido';
+      }
+    }
+
+    function initModalMap(lat, lng) {
+      setTimeout(() => {
+        if (!modalMap) {
+          modalMap = L.map('modalMap').setView([lat, lng], 15);
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(modalMap);
+
+          modalMarker = L.marker([lat, lng], { draggable: true }).addTo(modalMap);
+
+          modalMarker.on('dragend', function(e) {
+            const position = modalMarker.getLatLng();
+            document.getElementById('editLat').value = position.lat.toFixed(6);
+            document.getElementById('editLng').value = position.lng.toFixed(6);
+          });
+
+          modalMap.on('click', function(e) {
+            modalMarker.setLatLng(e.latlng);
+            document.getElementById('editLat').value = e.latlng.lat.toFixed(6);
+            document.getElementById('editLng').value = e.latlng.lng.toFixed(6);
+          });
+        } else {
+          modalMap.invalidateSize();
+          modalMap.setView([lat, lng], 15);
+          modalMarker.setLatLng([lat, lng]);
+        }
+      }, 200);
+    }
+
+    function updateMapFromInputs() {
+      const lat = parseFloat(document.getElementById('editLat').value);
+      const lng = parseFloat(document.getElementById('editLng').value);
+      if (!isNaN(lat) && !isNaN(lng) && modalMap && modalMarker) {
+        modalMarker.setLatLng([lat, lng]);
+        modalMap.setView([lat, lng]);
+      }
+    }
+
+    function saveLocal() {
+      const idVal = document.getElementById('editId').value;
+      const nome = document.getElementById('editNome').value.trim();
+      const endereco = document.getElementById('editEndereco').value.trim();
+      const bairro = document.getElementById('editBairro').value.trim();
+      const linkFotos = document.getElementById('editLinkFotos').value.trim();
+      const status = document.getElementById('editStatus').value;
+      const lat = parseFloat(document.getElementById('editLat').value);
+      const lng = parseFloat(document.getElementById('editLng').value);
+
+      if (!nome) {
+        alert('Por favor, informe o Nome do Local.');
+        return;
+      }
+
+      const queryMap = `${nome}, ${endereco}, Taquaritinga SP`.replace(/ /g, '+');
+      const linkMaps = `https://www.google.com/maps/search/?api=1&query=${queryMap}`;
+
+      if (idVal !== '') {
+        const id = parseInt(idVal);
+        const index = locaisData.findIndex(l => l.id === id);
+        if (index !== -1) {
+          locaisData[index] = {
+            ...locaisData[index],
+            nome, endereco, bairro, linkFotos, status, lat, lng, linkMaps
+          };
+        }
+      } else {
+        const nextId = locaisData.length > 0 ? Math.max(...locaisData.map(l => l.id)) + 1 : 1;
+        locaisData.push({
+          id: nextId,
+          nome, endereco, bairro, lat, lng, status, linkMaps, linkFotos,
+          dataAtendimento: "27/07/2026"
+        });
+      }
+
+      updateStats();
+      renderTable();
+      closeModal();
+      alert('Local salvo com sucesso! Clique em "Exportar locais.json" para salvar e publicar no site.');
+    }
+
+    function exportJSON() {
+      const concluidos = locaisData.filter(l => l.status === 'concluido').length;
+      const jsonOutput = {
+        ultima_atualizacao: new Date().toLocaleDateString('pt-BR') + ' ' + new Date().toLocaleTimeString('pt-BR'),
+        total_locais: locaisData.length,
+        total_concluidos: concluidos,
+        total_pendentes: locaisData.length - concluidos,
+        locais: locaisData
+      };
+
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(jsonOutput, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", "locais.json");
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    document.addEventListener('DOMContentLoaded', loadData);
+  </script>
+</body>
+</html>
