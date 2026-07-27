@@ -1,0 +1,1707 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transparência Vendaval 2026 - Taquaritinga/SP</title>
+  <meta name="description" content="Portal de transparência e monitoramento dos locais atingidos pelo vendaval em Taquaritinga/SP (2026). Acompanhamento de atendimentos e rotas de apoio.">
+
+  <!-- Google Fonts: Inter & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+  
+  <!-- Target Mode CSS (dev tool) -->
+  <link rel="stylesheet" href="scripts/target-mode.css">
+
+  <style>
+    :root {
+      --primary: #0284c7;
+      --primary-dark: #0369a1;
+      --primary-light: #e0f2fe;
+      --secondary: #10b981;
+      --secondary-dark: #059669;
+      --secondary-light: #d1fae5;
+      --accent: #f59e0b;
+      --accent-light: #fef3c7;
+      --bg-slate: #0f172a;
+      --card-bg: #1e293b;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: #334155;
+      --radius: 12px;
+      --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-slate);
+      color: var(--text-main);
+      line-height: 1.6;
+      padding-bottom: 60px;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: 'Outfit', sans-serif;
+    }
+
+    header {
+      background: linear-gradient(135deg, #0f172a 0%, #0369a1 50%, #059669 100%);
+      padding: 40px 20px 30px 20px;
+      text-align: center;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(circle at 80% 20%, rgba(255,255,255,0.1) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .badge-header {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(8px);
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    header h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+
+    header p {
+      color: var(--primary-light);
+      max-width: 650px;
+      margin: 0 auto 24px auto;
+      font-size: 1rem;
+    }
+
+    /* Stats Grid */
+    .stats-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .stat-card {
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 16px;
+      border-radius: var(--radius);
+      text-align: center;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .stat-card i {
+      font-size: 1.4rem;
+      margin-bottom: 6px;
+    }
+
+    .stat-card.blue i { color: #38bdf8; }
+    .stat-card.green i { color: #34d399; }
+    .stat-card.amber i { color: #fbbf24; }
+
+    .stat-number {
+      font-size: 1.8rem;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 30px 20px;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-main);
+    }
+
+    .section-title i {
+      color: var(--primary);
+    }
+
+    /* Controls: Search and Filters */
+    .controls-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .search-box {
+      flex: 1;
+      min-width: 260px;
+      position: relative;
+    }
+
+    .search-box i {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 12px 14px 12px 42px;
+      background: #0f172a;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      color: white;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-box input:focus {
+      border-color: var(--primary);
+    }
+
+    .filter-buttons {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      padding: 10px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      background: #0f172a;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .filter-btn:hover, .filter-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .filter-btn.active.green {
+      background: var(--secondary);
+      border-color: var(--secondary);
+    }
+
+    .filter-btn.active.amber {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    /* Map Section */
+    .map-container {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 30px;
+      box-shadow: var(--shadow);
+    }
+
+    #map {
+      height: 420px;
+      width: 100%;
+      background: #0f172a;
+    }
+
+    /* Cards Grid */
+    .locais-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .local-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+      position: relative;
+    }
+
+    .local-card:hover {
+      transform: translateY(-3px);
+      border-color: #475569;
+    }
+
+    .local-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+      gap: 10px;
+    }
+
+    .local-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1.3;
+    }
+
+    .status-badge {
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+
+    .status-badge.concluido {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.4);
+    }
+
+    .status-badge.pendente {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+    }
+
+    .local-address {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .local-address i {
+      color: var(--primary);
+      margin-top: 4px;
+    }
+
+    .local-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .btn {
+      padding: 9px 12px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-align: center;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: background 0.2s;
+    }
+
+    .btn-maps {
+      background: #0284c7;
+      color: white;
+    }
+
+    .btn-maps:hover {
+      background: #0369a1;
+    }
+
+    .btn-photos {
+      background: #10b981;
+      color: white;
+    }
+
+    .btn-photos:hover {
+      background: #059669;
+    }
+
+    .btn-photos.disabled {
+      background: #334155;
+      color: #64748b;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    /* Rotas Otimizadas Section */
+    .routes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .route-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .route-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: rgba(2, 132, 199, 0.2);
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 16px;
+    }
+
+    .route-card h3 {
+      font-size: 1.2rem;
+      margin-bottom: 8px;
+    }
+
+    .route-card p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+    }
+
+    .route-list {
+      list-style: none;
+      margin-bottom: 20px;
+    }
+
+    .route-list li {
+      padding: 6px 0;
+      border-bottom: 1px dashed var(--border-color);
+      font-size: 0.85rem;
+      color: #cbd5e1;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .route-list li i {
+      color: var(--secondary);
+      font-size: 0.75rem;
+    }
+
+    /* Support Section */
+    .support-card {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      border: 1px solid #334155;
+      border-radius: var(--radius);
+      padding: 30px;
+      margin-bottom: 40px;
+      box-shadow: var(--shadow);
+    }
+
+    .support-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 24px;
+      margin-top: 20px;
+    }
+
+    .support-item {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 20px;
+    }
+
+    .support-item h4 {
+      color: var(--primary-light);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .support-item p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 12px;
+    }
+
+    .pix-box {
+      background: #0f172a;
+      border: 1px dashed var(--secondary);
+      padding: 10px;
+      border-radius: 6px;
+      font-family: monospace;
+      font-size: 0.9rem;
+      color: #34d399;
+      word-break: break-all;
+      text-align: center;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px 20px;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--border-color);
+      background: #090d16;
+    }
+
+    footer a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    @media (max-width: 600px) {
+      header h1 { font-size: 1.6rem; }
+      .container { padding: 16px 12px; }
+      .controls-card { padding: 14px; }
+      #map { height: 320px; }
+      .locais-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="badge-header">
+      <i class="fa-solid fa-cloud-bolt">
+      </i> Taquaritinga / SP • Julho 2026
+    </div>
+    <h1>Portal de Transparência - Vendaval</h1>
+    <p>Acompanhamento em tempo real dos 62+ locais afetados, relatórios fotográficos de atendimento e rotas de apoio emergencial.</p>
+
+    <div class="stats-container">
+      <div class="stat-card blue">
+        <i class="fa-solid fa-map-location-dot"></i>
+        <div class="stat-number" id="stat-total">62</div>
+        <div class="stat-label">Locais Mapeados</div>
+      </div>
+      <div class="stat-card green">
+        <i class="fa-solid fa-circle-check"></i>
+        <div class="stat-number" id="stat-concluidos">0</div>
+        <div class="stat-label">Atendidos / Fotos</div>
+      </div>
+      <div class="stat-card amber">
+        <i class="fa-solid fa-clock"></i>
+        <div class="stat-number" id="stat-pendentes">62</div>
+        <div class="stat-label">Em Vistoria / Pendentes</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Content Container -->
+  <main class="container">
+
+    <!-- Interactive Map Section -->
+    <h2 class="section-title">
+      <i class="fa-solid fa-map"></i> Mapa Interativo dos Atingidos
+    </h2>
+    <div class="map-container">
+      <div id="map"></div>
+    </div>
+
+    <!-- Controls & Realtime Search -->
+    <div class="controls-card">
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="searchInput" placeholder="Buscar por local, escola, avenida ou bairro...">
+      </div>
+
+      <div class="filter-buttons">
+        <button class="filter-btn active" data-filter="todos">
+          <i class="fa-solid fa-list"></i> Todos (<span id="count-todos">62</span>)
+        </button>
+        <button class="filter-btn green" data-filter="concluido">
+          <i class="fa-solid fa-check"></i> Concluídos (<span id="count-concluidos">0</span>)
+        </button>
+        <button class="filter-btn amber" data-filter="pendente">
+          <i class="fa-solid fa-hourglass-half"></i> Pendentes (<span id="count-pendentes">62</span>)
+        </button>
+      </div>
+    </div>
+
+    <!-- Locations Cards List -->
+    <h2 class="section-title">
+      <i class="fa-solid fa-building-circle-exclamation"></i> Locais Registrados
+    </h2>
+    <div class="locais-grid" id="locaisGrid">
+      <!-- Cards rendered via JS -->
+    </div>
+
+    <!-- Optimized Routes Section -->
+    <h2 class="section-title">
+      <i class="fa-solid fa-route"></i> Rotas Otimizadas de Inspeção & Limpeza
+    </h2>
+    <div class="routes-grid" id="routesGrid">
+      <!-- Rotas renderizadas dinamicamente pelo JS -->
+    </div>
+
+    <!-- How to Support Section -->
+    <h2 class="section-title">
+      <i class="fa-solid fa-hand-holding-heart"></i> Como Apoiar as Famílias Atingidas
+    </h2>
+    <div class="support-card">
+      <p style="color: var(--text-muted); font-size: 1rem;">Campanha oficial de arrecadação de doações (telhas, alimentos, agasalhos e produtos de higiene) coordenadas pelo Fundo Social e Defesa Civil de Taquaritinga/SP.</p>
+
+      <div class="support-grid">
+        <div class="support-item">
+          <h4><i class="fa-solid fa-qrcode" style="color: var(--secondary);"></i> Chave PIX Oficial</h4>
+          <p>Para doações financeiras destinadas à compra de materiais de reconstrução:</p>
+          <div class="pix-box">defesacivil@taquaritinga.sp.gov.br</div>
+        </div>
+
+        <div class="support-item">
+          <h4><i class="fa-brands fa-whatsapp" style="color: #25D366;"></i> Central de Atendimento</h4>
+          <p>Envie fotos de novos pontos afetados ou peça auxílio para remoção de entulhos:</p>
+          <a href="https://wa.me/5516999999999?text=Ol%C3%A1,%20gostaria%20de%20relatar%20um%20ponto%20atingido%20pelo%20vendaval" target="_blank" class="btn btn-photos" style="width: 100%;">
+            <i class="fa-brands fa-whatsapp"></i> Falar no WhatsApp
+          </a>
+        </div>
+
+        <div class="support-item">
+          <h4><i class="fa-solid fa-phone-volume" style="color: var(--primary);"></i> Telefones Úteis</h4>
+          <p>
+            • Defesa Civil: <strong>199</strong><br>
+            • Corpo de Bombeiros: <strong>193</strong><br>
+            • Guarda Municipal: <strong>153</strong>
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>Painel de Transparência Vendaval Taquaritinga/SP • Atualizado em <span id="lbl-atualizacao">27/07/2026</span></p>
+    <p style="margin-top: 6px;">Desenvolvido com foco em utilidade pública e dados abertos.</p>
+  </footer>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  
+  <!-- Target Mode JS (Dev tool - Ctrl+Shift+H) -->
+  <script src="scripts/target-mode.js"></script>
+
+  <script>
+    const initialData = {
+  "ultima_atualizacao": "27/07/2026 09:28:01",
+  "total_locais": 62,
+  "total_concluidos": 0,
+  "total_pendentes": 62,
+  "locais": [
+    {
+      "id": 1,
+      "nome": "berçario Anunciata Colombo",
+      "endereco": "Berçário Anunciata Colombo, Vila Esperança, Taquaritinga - SP",
+      "bairro": "Vila Esperança",
+      "lat": -21.401,
+      "lng": -48.509,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=berçario+Anunciata+Colombo+Taquaritinga+SP",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 2,
+      "nome": "clube do funcionario publico da prefeitura",
+      "endereco": "Estrada Mun. - Taquaritinga, SP, 15900-000, Brazil",
+      "bairro": "Jardim das Laranjeiras",
+      "lat": -21.408837,
+      "lng": -48.49103,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=clube+do+funcionario+publico+da+prefeitura,+Estrada+Mun.+-+Taquaritinga,+SP,+15900-000,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 3,
+      "nome": "comite da prefeitura",
+      "endereco": "Rua Marechal Deodoro, 1130 - Taquaritinga, SP, 15900-000, Brazil",
+      "bairro": "Centro",
+      "lat": -21.401751,
+      "lng": -48.501058,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=comite+da+prefeitura,+Rua+Marechal+Deodoro,+1130+-+Taquaritinga,+SP,+15900-000,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 4,
+      "nome": "Guariroba distrito",
+      "endereco": "Guariroba, Taquaritinga - State of São Paulo, 15908-017, Brazil",
+      "bairro": "Guariroba",
+      "lat": -21.476522,
+      "lng": -48.624598,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=Guariroba+distrito,+Guariroba,+Taquaritinga+-+State+of+São+Paulo,+15908-017,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 5,
+      "nome": "recapex marragni",
+      "endereco": "Rua Nildo - R. Theodoro Davoglio, 400 - Taquaritinga, SP, 15900-000, Brazil",
+      "bairro": "Taquaritinga/SP",
+      "lat": -21.412806,
+      "lng": -48.481922,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=recapex+marragni,+Rua+Nildo+-+R.+Theodoro+Davoglio,+400+-+Taquaritinga,+SP,+15900-000,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 6,
+      "nome": "Residencias atingidas vendaval, Taquaritinga - SP",
+      "endereco": "Av. Linda Antonio Mansur - Taquaritinga, SP, 15900-000, Brazil",
+      "bairro": "Taquaritinga/SP",
+      "lat": -21.421371,
+      "lng": -48.504107,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=Residencias+atingidas+vendaval,+Taquaritinga+-+SP,+Av.+Linda+Antonio+Mansur+-+Taquaritinga,+SP,+15900-000,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 7,
+      "nome": "Av. Paulo Roberto Scandar",
+      "endereco": "Av. Paulo Roberto Scandar - Taquaritinga, SP, 15904-020, Brazil",
+      "bairro": "Centro / Vila Nova",
+      "lat": -21.404811,
+      "lng": -48.509021,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=Av.+Paulo+Roberto+Scandar,+Av.+Paulo+Roberto+Scandar+-+Taquaritinga,+SP,+15904-020,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 8,
+      "nome": "Av. Vicente José Parise",
+      "endereco": "Av. Vicente José Parise - Taquaritinga, SP, 15901-032, Brazil",
+      "bairro": "Centro",
+      "lat": -21.406657,
+      "lng": -48.497444,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=Av.+Vicente+José+Parise,+Av.+Vicente+José+Parise+-+Taquaritinga,+SP,+15901-032,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 9,
+      "nome": "av.Admo Lui",
+      "endereco": "Av. Adamo Lui - Taquaritinga, SP, 15906-009, Brazil",
+      "bairro": "Taquaritinga/SP",
+      "lat": -21.412717,
+      "lng": -48.511991,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=av.Admo+Lui,+Av.+Adamo+Lui+-+Taquaritinga,+SP,+15906-009,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 10,
+      "nome": "av.Caetano Decaro",
+      "endereco": "Av. Caetano Decaro - Taquaritinga, SP, 15904-022, Brazil",
+      "bairro": "Taquaritinga/SP",
+      "lat": -21.402056,
+      "lng": -48.51679,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=av.Caetano+Decaro,+Av.+Caetano+Decaro+-+Taquaritinga,+SP,+15904-022,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 11,
+      "nome": "av.Calil Jose Dib",
+      "endereco": "Av. Calil José Dib - Taquaritinga, SP, 15900-000, Brazil",
+      "bairro": "Taquaritinga/SP",
+      "lat": -21.407553,
+      "lng": -48.496243,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=av.Calil+Jose+Dib,+Av.+Calil+José+Dib+-+Taquaritinga,+SP,+15900-000,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 12,
+      "nome": "av.Celso Ferreira de Camargo",
+      "endereco": "Av. Célso Ferreira de Camargo - Taquaritinga, SP, 15901-066, Brazil",
+      "bairro": "Taquaritinga/SP",
+      "lat": -21.392057,
+      "lng": -48.477054,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=av.Celso+Ferreira+de+Camargo,+Av.+Célso+Ferreira+de+Camargo+-+Taquaritinga,+SP,+15901-066,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 13,
+      "nome": "av.Heitor Alves Gomes",
+      "endereco": "Av. Heitor Alves Gomes - Taquaritinga, SP, 15900-000, Brazil",
+      "bairro": "Jd. Vale do Sol",
+      "lat": -21.40379,
+      "lng": -48.486481,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=av.Heitor+Alves+Gomes,+Av.+Heitor+Alves+Gomes+-+Taquaritinga,+SP,+15900-000,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 14,
+      "nome": "av.Joao Perissinoti  ginasio de esporte",
+      "endereco": "Av. João Perissinotti - Taquaritinga, SP, 15901-084, Brazil",
+      "bairro": "Taquaritinga/SP",
+      "lat": -21.402165,
+      "lng": -48.495173,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=av.Joao+Perissinoti++ginasio+de+esporte,+Av.+João+Perissinotti+-+Taquaritinga,+SP,+15901-084,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 15,
+      "nome": "Av.Mario da Silva Camargo",
+      "endereco": "Av. Mario da Silva Camargo - Taquaritinga, SP, 15904-166, Brazil",
+      "bairro": "Pq. Res. Laranjeiras II",
+      "lat": -21.398852,
+      "lng": -48.51225,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=Av.Mario+da+Silva+Camargo,+Av.+Mario+da+Silva+Camargo+-+Taquaritinga,+SP,+15904-166,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 16,
+      "nome": "av.Paulo Zupanni",
+      "endereco": "R. Gen. Osório - Taquaritinga, SP, 15900-000, Brazil",
+      "bairro": "Taquaritinga/SP",
+      "lat": -21.406505,
+      "lng": -48.504145,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=av.Paulo+Zupanni,+R.+Gen.+Osório+-+Taquaritinga,+SP,+15900-000,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 17,
+      "nome": "bairro Talavasso UBS vale do sol",
+      "endereco": "Bairro Talavasso, Taquaritinga - SP, 15900-000, Brazil",
+      "bairro": "Taquaritinga/SP",
+      "lat": -21.401408,
+      "lng": -48.487473,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=bairro+Talavasso+UBS+vale+do+sol,+Bairro+Talavasso,+Taquaritinga+-+SP,+15900-000,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 18,
+      "nome": "comite da prefeitura  vendaval- Taquaritinga - SP",
+      "endereco": "Rua Marechal Deodoro, 1130 - Taquaritinga, SP, 15900-000, Brazil",
+      "bairro": "Centro",
+      "lat": -21.401751,
+      "lng": -48.501058,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=comite+da+prefeitura++vendaval-+Taquaritinga+-+SP,+Rua+Marechal+Deodoro,+1130+-+Taquaritinga,+SP,+15900-000,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 19,
+      "nome": "Conj. Hab. Dr. Adail Nunes da Silva",
+      "endereco": "Estádio Mun. Adail Nunes da Silva - R. Neudenir Bordini - Taquaritinga, SP, 15900-000, Brazil",
+      "bairro": "Dr. Adail Nunes da Silva",
+      "lat": -21.399857,
+      "lng": -48.493409,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=Conj.+Hab.+Dr.+Adail+Nunes+da+Silva,+Estádio+Mun.+Adail+Nunes+da+Silva+-+R.+Neudenir+Bordini+-+Taquaritinga,+SP,+15900-000,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 20,
+      "nome": "dashboard",
+      "endereco": "Av. Linda Antonio Mansur - Taquaritinga, SP, 15900-000, Brazil",
+      "bairro": "Taquaritinga/SP",
+      "lat": -21.421371,
+      "lng": -48.504107,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=dashboard,+Av.+Linda+Antonio+Mansur+-+Taquaritinga,+SP,+15900-000,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 21,
+      "nome": "EMEB Estevam Schlobach Salvagni",
+      "endereco": "1704 - R. Hilário dos Anjos - Taquaritinga, SP, 15900-000, Brazil",
+      "bairro": "Vila Esperança",
+      "lat": -21.409638,
+      "lng": -48.516338,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=EMEB+Estevam+Schlobach+Salvagni,+1704+-+R.+Hilário+dos+Anjos+-+Taquaritinga,+SP,+15900-000,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 22,
+      "nome": "EMEB Mathilde Menon",
+      "endereco": "Brazil, São Paulo, Taquaritinga, Jardim Micali, ヴィセンテ・ジョアン・オリヴェーリオ通り 371",
+      "bairro": "Taquaritinga/SP",
+      "lat": -21.420087,
+      "lng": -48.522518,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=EMEB+Mathilde+Menon,+Brazil,+São+Paulo,+Taquaritinga,+Jardim+Micali,+ヴィセンテ・ジョアン・オリヴェーリオ通り+371",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 23,
+      "nome": "Emilio Giroto",
+      "endereco": "Avenida Emilio Girotto - Taquaritinga, SP, 15906-760, Brazil",
+      "bairro": "Taquaritinga/SP",
+      "lat": -21.416591,
+      "lng": -48.517607,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=Emilio+Giroto,+Avenida+Emilio+Girotto+-+Taquaritinga,+SP,+15906-760,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 24,
+      "nome": "Escola Municipal Professor Modesto Bohrer",
+      "endereco": "R. Enês Réis Rodrigues, 71 - Jd. B. Vista, Taquaritinga - SP, 15905-004, Brazil",
+      "bairro": "Taquaritinga/SP",
+      "lat": -21.407018,
+      "lng": -48.510202,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=Escola+Municipal+Professor+Modesto+Bohrer,+R.+Enês+Réis+Rodrigues,+71+-+Jd.+B.+Vista,+Taquaritinga+-+SP,+15905-004,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 25,
+      "nome": "escola Santa Cecilia  ETAM",
+      "endereco": "Taquaritinga, State of São Paulo, 15900-000, Brazil",
+      "bairro": "Taquaritinga/SP",
+      "lat": -21.40112,
+      "lng": -48.508673,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=escola+Santa+Cecilia++ETAM,+Taquaritinga,+State+of+São+Paulo,+15900-000,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 26,
+      "nome": "francisco romano",
+      "endereco": "R. Francisco Inácio Pinto - Jardim Paraíso I, Taquaritinga - SP, 15900-000, Brazil",
+      "bairro": "Taquaritinga/SP",
+      "lat": -21.418887,
+      "lng": -48.51661,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=francisco+romano,+R.+Francisco+Inácio+Pinto+-+Jardim+Paraíso+I,+Taquaritinga+-+SP,+15900-000,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 27,
+      "nome": "general Osorio  igreja matriz",
+      "endereco": "R. Gen. Osório - Taquaritinga, SP, 15900-013, Brazil",
+      "bairro": "Taquaritinga/SP",
+      "lat": -21.408888,
+      "lng": -48.504447,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=general+Osorio++igreja+matriz,+R.+Gen.+Osório+-+Taquaritinga,+SP,+15900-013,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 28,
+      "nome": "Guariroba distrito",
+      "endereco": "Guariroba, Taquaritinga - State of São Paulo, 15908-017, Brazil",
+      "bairro": "Guariroba",
+      "lat": -21.476522,
+      "lng": -48.624598,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=Guariroba+distrito,+Guariroba,+Taquaritinga+-+State+of+São+Paulo,+15908-017,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 29,
+      "nome": "Josephina mantese morcelli pinsetta",
+      "endereco": "R. Vicente Mantese - Taquaritinga, SP, 15906-280, Brazil",
+      "bairro": "Taquaritinga/SP",
+      "lat": -21.423785,
+      "lng": -48.508679,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=Josephina+mantese+morcelli+pinsetta,+R.+Vicente+Mantese+-+Taquaritinga,+SP,+15906-280,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 30,
+      "nome": "Organizado_Por_Endereco",
+      "endereco": "Av. Linda Antonio Mansur - Taquaritinga, SP, 15900-000, Brazil",
+      "bairro": "Taquaritinga/SP",
+      "lat": -21.421371,
+      "lng": -48.504107,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=Organizado_Por_Endereco,+Av.+Linda+Antonio+Mansur+-+Taquaritinga,+SP,+15900-000,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 31,
+      "nome": "Parque Vinicus de morares UBS Neoseti",
+      "endereco": "Parque Vinícius de Moraes, Taquaritinga - SP, 15900-000, Brazil",
+      "bairro": "Taquaritinga/SP",
+      "lat": -21.418668,
+      "lng": -48.519661,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=Parque+Vinicus+de+morares+UBS+Neoseti,+Parque+Vinícius+de+Moraes,+Taquaritinga+-+SP,+15900-000,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 32,
+      "nome": "passarela rua doutor jose miguel joao",
+      "endereco": "R. Dr. Jose Miguel João - Taquaritinga, SP, 15900-000, Brazil",
+      "bairro": "Taquaritinga/SP",
+      "lat": -21.425122,
+      "lng": -48.511692,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=passarela+rua+doutor+jose+miguel+joao,+R.+Dr.+Jose+Miguel+João+-+Taquaritinga,+SP,+15900-000,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 33,
+      "nome": "posto de saude paraiso nelson sargi",
+      "endereco": "Jardim Paraíso II, Taquaritinga - SP, 15900-000, Brazil",
+      "bairro": "Taquaritinga/SP",
+      "lat": -21.424743,
+      "lng": -48.519668,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=posto+de+saude+paraiso+nelson+sargi,+Jardim+Paraíso+II,+Taquaritinga+-+SP,+15900-000,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 34,
+      "nome": "praça Edwil Roncada",
+      "endereco": "Praça Edwil Roncada - Taquaritinga, SP, 15900-000, Brazil",
+      "bairro": "Taquaritinga/SP",
+      "lat": -21.411979,
+      "lng": -48.500127,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=praça+Edwil+Roncada,+Praça+Edwil+Roncada+-+Taquaritinga,+SP,+15900-000,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 35,
+      "nome": "Praça Guilherme José Franco, 70-677 - Taquaritinga, SP",
+      "endereco": "Praça Guilherme José Franco, 70 - Taquaritinga, SP, 15900-000, Brazil",
+      "bairro": "Centro",
+      "lat": -21.397511,
+      "lng": -48.509465,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=Praça+Guilherme+José+Franco,+70-677+-+Taquaritinga,+SP,+Praça+Guilherme+José+Franco,+70+-+Taquaritinga,+SP,+15900-000,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 36,
+      "nome": "Praça Horacio Ramalho",
+      "endereco": "Rod. Dr. Horácio Ramalho - Taquaritinga, SP, 15900-000, Brazil",
+      "bairro": "Taquaritinga/SP",
+      "lat": -21.399708,
+      "lng": -48.474032,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=Praça+Horacio+Ramalho,+Rod.+Dr.+Horácio+Ramalho+-+Taquaritinga,+SP,+15900-000,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 37,
+      "nome": "Praça Horacio Ramalho camara Municiapal",
+      "endereco": "Estrada Mun. - Taquaritinga, SP, 15900-000, Brazil",
+      "bairro": "Taquaritinga/SP",
+      "lat": -21.408837,
+      "lng": -48.49103,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=Praça+Horacio+Ramalho+camara+Municiapal,+Estrada+Mun.+-+Taquaritinga,+SP,+15900-000,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 38,
+      "nome": "praça sr.waldemar de Ambrosio",
+      "endereco": "R. Domingos D Ambrósio - Vila São Sebastião, Taquaritinga - SP, 15900-000, Brazil",
+      "bairro": "Taquaritinga/SP",
+      "lat": -21.383409,
+      "lng": -48.496799,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=praça+sr.waldemar+de+Ambrosio,+R.+Domingos+D+Ambrósio+-+Vila+São+Sebastião,+Taquaritinga+-+SP,+15900-000,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 39,
+      "nome": "predio da Prefeitura",
+      "endereco": "Rod. Dr. Horácio Ramalho - Taquaritinga, SP, 15900-000, Brazil",
+      "bairro": "Taquaritinga/SP",
+      "lat": -21.399722,
+      "lng": -48.473601,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=predio+da+Prefeitura,+Rod.+Dr.+Horácio+Ramalho+-+Taquaritinga,+SP,+15900-000,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 40,
+      "nome": "R. Alfi Olyntho Cucolicchio - Jardim Vale do Sol,",
+      "endereco": "R. Alfi Olyntho Cucolicchio - Taquaritinga, SP, 15901-310, Brazil",
+      "bairro": "Taquaritinga/SP",
+      "lat": -21.400506,
+      "lng": -48.479739,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=R.+Alfi+Olyntho+Cucolicchio+-+Jardim+Vale+do+Sol,,+R.+Alfi+Olyntho+Cucolicchio+-+Taquaritinga,+SP,+15901-310,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 41,
+      "nome": "R. Angelo Bossine Neto",
+      "endereco": "R. Angelo Bossine Neto - Taquaritinga, SP, 15901-352, Brazil",
+      "bairro": "Taquaritinga/SP",
+      "lat": -21.401855,
+      "lng": -48.471447,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=R.+Angelo+Bossine+Neto,+R.+Angelo+Bossine+Neto+-+Taquaritinga,+SP,+15901-352,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 42,
+      "nome": "R. Antenor Milanezi, 488-538 - Jardim Vale do Sol, Taquaritinga - SP",
+      "endereco": "R. Antenor Milanezi, 488 - Jardim Vale do Sol, Taquaritinga - SP, 15900-000, Brazil",
+      "bairro": "Taquaritinga/SP",
+      "lat": -21.401981,
+      "lng": -48.479596,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=R.+Antenor+Milanezi,+488-538+-+Jardim+Vale+do+Sol,+Taquaritinga+-+SP,+R.+Antenor+Milanezi,+488+-+Jardim+Vale+do+Sol,+Taquaritinga+-+SP,+15900-000,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 43,
+      "nome": "R. Bernardino Sampaio, 580 - Vila Sargi",
+      "endereco": "R. Bernardino Sampaio, 580 - Vila Sargi, Taquaritinga - SP, 15900-025, Brazil",
+      "bairro": "Taquaritinga/SP",
+      "lat": -21.406235,
+      "lng": -48.498312,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=R.+Bernardino+Sampaio,+580+-+Vila+Sargi,+R.+Bernardino+Sampaio,+580+-+Vila+Sargi,+Taquaritinga+-+SP,+15900-025,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 44,
+      "nome": "R. Cel. Gustavo A de Moraes,",
+      "endereco": "R. Cel. Gustavo A de Moraes - Taquaritinga, SP, 15900-000, Brazil",
+      "bairro": "Taquaritinga/SP",
+      "lat": -21.408379,
+      "lng": -48.515932,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=R.+Cel.+Gustavo+A+de+Moraes,,+R.+Cel.+Gustavo+A+de+Moraes+-+Taquaritinga,+SP,+15900-000,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 45,
+      "nome": "R. Dr. Argidio Prevideli, 2-92 - Taquaritinga, SP",
+      "endereco": "R. Dr. Argidio Prevideli, 2 - Taquaritinga, SP, 15900-000, Brazil",
+      "bairro": "Taquaritinga/SP",
+      "lat": -21.412137,
+      "lng": -48.509742,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=R.+Dr.+Argidio+Prevideli,+2-92+-+Taquaritinga,+SP,+R.+Dr.+Argidio+Prevideli,+2+-+Taquaritinga,+SP,+15900-000,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 46,
+      "nome": "R. Luiz Patti, 2-160 - Taquaritinga, SP,  Taquaritinga - SP",
+      "endereco": "R. Luiz Patti, 2 - Taquaritinga, SP, 15900-000, Brazil",
+      "bairro": "Taquaritinga/SP",
+      "lat": -21.402967,
+      "lng": -48.484499,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=R.+Luiz+Patti,+2-160+-+Taquaritinga,+SP,++Taquaritinga+-+SP,+R.+Luiz+Patti,+2+-+Taquaritinga,+SP,+15900-000,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 47,
+      "nome": "R. Luís Benaglia,",
+      "endereco": "R. Luís Benaglia - Taquaritinga, SP, 15900-000, Brazil",
+      "bairro": "Taquaritinga/SP",
+      "lat": -21.399916,
+      "lng": -48.514435,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=R.+Luís+Benaglia,,+R.+Luís+Benaglia+-+Taquaritinga,+SP,+15900-000,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 48,
+      "nome": "R.Cesar Rossi- Taquaritinga, SP,  Taquaritinga - SP",
+      "endereco": "R. César Rossi - Taquaritinga, SP, 15900-000, Brazil",
+      "bairro": "Taquaritinga/SP",
+      "lat": -21.401345,
+      "lng": -48.480008,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=R.Cesar+Rossi-+Taquaritinga,+SP,++Taquaritinga+-+SP,+R.+César+Rossi+-+Taquaritinga,+SP,+15900-000,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 49,
+      "nome": "R.DR.Benjamin FG Neto- Taquaritinga, SP,  Taquaritinga - SP",
+      "endereco": "R. Dr. Benjamin F G Neto - Taquaritinga, SP, 15900-000, Brazil",
+      "bairro": "Taquaritinga/SP",
+      "lat": -21.401105,
+      "lng": -48.47957,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=R.DR.Benjamin+FG+Neto-+Taquaritinga,+SP,++Taquaritinga+-+SP,+R.+Dr.+Benjamin+F+G+Neto+-+Taquaritinga,+SP,+15900-000,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 50,
+      "nome": "R.General Glicerio",
+      "endereco": "R. Gen. Glicério - Taquaritinga, SP, 15905-014, Brazil",
+      "bairro": "Taquaritinga/SP",
+      "lat": -21.406992,
+      "lng": -48.505255,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=R.General+Glicerio,+R.+Gen.+Glicério+-+Taquaritinga,+SP,+15905-014,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 51,
+      "nome": "rodoviaria",
+      "endereco": "Terminal Rodoviário de Taquaritinga - Av. Vicente José Parise, 912 - Taquaritinga, SP, 15900-000, Brazil",
+      "bairro": "Taquaritinga/SP",
+      "lat": -21.411542,
+      "lng": -48.4992,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=rodoviaria,+Terminal+Rodoviário+de+Taquaritinga+-+Av.+Vicente+José+Parise,+912+-+Taquaritinga,+SP,+15900-000,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 52,
+      "nome": "rua Bernadino Samapaio",
+      "endereco": "R. Bernardino Sampaio - Taquaritinga, SP, 15900-025, Brazil",
+      "bairro": "Taquaritinga/SP",
+      "lat": -21.407978,
+      "lng": -48.498532,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=rua+Bernadino+Samapaio,+R.+Bernardino+Sampaio+-+Taquaritinga,+SP,+15900-025,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 53,
+      "nome": "rua dos Domingues-Taquaritinga SP",
+      "endereco": "R. dos Domingues - Taquaritinga, SP, 15900-023, Brazil",
+      "bairro": "Taquaritinga/SP",
+      "lat": -21.406773,
+      "lng": -48.499428,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=rua+dos+Domingues-Taquaritinga+SP,+R.+dos+Domingues+-+Taquaritinga,+SP,+15900-023,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 54,
+      "nome": "rua doutor Jorge Tibiriça",
+      "endereco": "R. Dr. Jorge Tibiriçá - Taquaritinga, SP, 15900-000, Brazil",
+      "bairro": "Taquaritinga/SP",
+      "lat": -21.395399,
+      "lng": -48.50141,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=rua+doutor+Jorge+Tibiriça,+R.+Dr.+Jorge+Tibiriçá+-+Taquaritinga,+SP,+15900-000,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 55,
+      "nome": "rua Jamil Jose jd Paineira",
+      "endereco": "R. Jamil José - Taquaritinga, SP, 15901-270, Brazil",
+      "bairro": "Taquaritinga/SP",
+      "lat": -21.405642,
+      "lng": -48.488305,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=rua+Jamil+Jose+jd+Paineira,+R.+Jamil+José+-+Taquaritinga,+SP,+15901-270,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 56,
+      "nome": "rua José Maria gonçalves",
+      "endereco": "R. José Maria Gonçalves - Bairro Talavasso, Taquaritinga - SP, 15900-000, Brazil",
+      "bairro": "Taquaritinga/SP",
+      "lat": -21.401907,
+      "lng": -48.491106,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=rua+José+Maria+gonçalves,+R.+José+Maria+Gonçalves+-+Bairro+Talavasso,+Taquaritinga+-+SP,+15900-000,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 57,
+      "nome": "sp 319",
+      "endereco": "SP-319 - Taquaritinga, SP, 15900-000, Brazil",
+      "bairro": "Taquaritinga/SP",
+      "lat": -21.469087,
+      "lng": -48.528802,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=sp+319,+SP-319+-+Taquaritinga,+SP,+15900-000,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 58,
+      "nome": "Vicente Jose Parise",
+      "endereco": "Av. Vicente José Parise - Taquaritinga, SP, 15901-032, Brazil",
+      "bairro": "Taquaritinga/SP",
+      "lat": -21.406657,
+      "lng": -48.497444,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=Vicente+Jose+Parise,+Av.+Vicente+José+Parise+-+Taquaritinga,+SP,+15901-032,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 59,
+      "nome": "videos mp4",
+      "endereco": "Av. Linda Antonio Mansur - Taquaritinga, SP, 15900-000, Brazil",
+      "bairro": "Taquaritinga/SP",
+      "lat": -21.421371,
+      "lng": -48.504107,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=videos+mp4,+Av.+Linda+Antonio+Mansur+-+Taquaritinga,+SP,+15900-000,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 60,
+      "nome": "vila são sebastião",
+      "endereco": "Vila São Sebastião, Taquaritinga - SP, 15900-000, Brazil",
+      "bairro": "Taquaritinga/SP",
+      "lat": -21.385004,
+      "lng": -48.497471,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=vila+são+sebastião,+Vila+São+Sebastião,+Taquaritinga+-+SP,+15900-000,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 61,
+      "nome": "visita do dep estadual do estado a Taquaritinga - SP",
+      "endereco": "Rua Aristides C Schlobach, 440 - Jardim Bela Vista, Taquaritinga - SP, 15900-000, Brazil",
+      "bairro": "Taquaritinga/SP",
+      "lat": -21.405308,
+      "lng": -48.51085,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=visita+do+dep+estadual+do+estado+a+Taquaritinga+-+SP,+Rua+Aristides+C+Schlobach,+440+-+Jardim+Bela+Vista,+Taquaritinga+-+SP,+15900-000,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    },
+    {
+      "id": 62,
+      "nome": "visita do vice gov do estado a Taquaritinga - SP",
+      "endereco": "Rua Aristides C Schlobach, 440 - Jardim Bela Vista, Taquaritinga - SP, 15900-000, Brazil",
+      "bairro": "Taquaritinga/SP",
+      "lat": -21.405308,
+      "lng": -48.51085,
+      "status": "pendente",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=visita+do+vice+gov+do+estado+a+Taquaritinga+-+SP,+Rua+Aristides+C+Schlobach,+440+-+Jardim+Bela+Vista,+Taquaritinga+-+SP,+15900-000,+Brazil",
+      "linkFotos": "",
+      "dataAtendimento": "27/07/2026"
+    }
+  ],
+  "rotas": [
+    {
+      "id": 1,
+      "nome": "Setor 1 - Centro & Vila Esperança",
+      "descricao": "Rota otimizada cobrindo 23 locais na região Central e Vila Esperança.",
+      "total_locais": 23,
+      "link_gmaps": "https://www.google.com/maps/dir/ber%C3%A7ario%20Anunciata%20Colombo%2C%20Taquaritinga%20SP/comite%20da%20prefeitura%2C%20Taquaritinga%20SP/Av.%20Paulo%20Roberto%20Scandar%2C%20Taquaritinga%20SP/Av.%20Vicente%20Jos%C3%A9%20Parise%2C%20Taquaritinga%20SP/av.Caetano%20Decaro%2C%20Taquaritinga%20SP/av.Paulo%20Zupanni%2C%20Taquaritinga%20SP/comite%20da%20prefeitura%20%20vendaval-%20Taquaritinga%20-%20SP%2C%20Taquaritinga%20SP/EMEB%20Estevam%20Schlobach%20Salvagni%2C%20Taquaritinga%20SP/EMEB%20Mathilde%20Menon%2C%20Taquaritinga%20SP/escola%20Santa%20Cecilia%20%20ETAM%2C%20Taquaritinga%20SP",
+      "locais": [
+        "berçario Anunciata Colombo",
+        "comite da prefeitura",
+        "Av. Paulo Roberto Scandar",
+        "Av. Vicente José Parise",
+        "av.Caetano Decaro",
+        "av.Paulo Zupanni",
+        "comite da prefeitura  vendaval- Taquaritinga - SP",
+        "EMEB Estevam Schlobach Salvagni",
+        "EMEB Mathilde Menon",
+        "escola Santa Cecilia  ETAM",
+        "Parque Vinicus de morares UBS Neoseti",
+        "praça Edwil Roncada",
+        "Praça Guilherme José Franco, 70-677 - Taquaritinga, SP",
+        "Praça Horacio Ramalho",
+        "Praça Horacio Ramalho camara Municiapal",
+        "praça sr.waldemar de Ambrosio",
+        "R. Bernardino Sampaio, 580 - Vila Sargi",
+        "R. Luiz Patti, 2-160 - Taquaritinga, SP,  Taquaritinga - SP",
+        "R.DR.Benjamin FG Neto- Taquaritinga, SP,  Taquaritinga - SP",
+        "rua Bernadino Samapaio",
+        "rua Jamil Jose jd Paineira",
+        "Vicente Jose Parise",
+        "visita do dep estadual do estado a Taquaritinga - SP"
+      ]
+    },
+    {
+      "id": 2,
+      "nome": "Setor 2 - Zona Norte & Laranjeiras",
+      "descricao": "Rota otimizada cobrindo 23 locais na Zona Norte e Laranjeiras.",
+      "total_locais": 23,
+      "link_gmaps": "https://www.google.com/maps/dir/clube%20do%20funcionario%20publico%20da%20prefeitura%2C%20Taquaritinga%20SP/av.Calil%20Jose%20Dib%2C%20Taquaritinga%20SP/av.Celso%20Ferreira%20de%20Camargo%2C%20Taquaritinga%20SP/av.Heitor%20Alves%20Gomes%2C%20Taquaritinga%20SP/av.Joao%20Perissinoti%20%20ginasio%20de%20esporte%2C%20Taquaritinga%20SP/Av.Mario%20da%20Silva%20Camargo%2C%20Taquaritinga%20SP/bairro%20Talavasso%20UBS%20vale%20do%20sol%2C%20Taquaritinga%20SP/Conj.%20Hab.%20Dr.%20Adail%20Nunes%20da%20Silva%2C%20Taquaritinga%20SP/dashboard%2C%20Taquaritinga%20SP/Emilio%20Giroto%2C%20Taquaritinga%20SP",
+      "locais": [
+        "clube do funcionario publico da prefeitura",
+        "av.Calil Jose Dib",
+        "av.Celso Ferreira de Camargo",
+        "av.Heitor Alves Gomes",
+        "av.Joao Perissinoti  ginasio de esporte",
+        "Av.Mario da Silva Camargo",
+        "bairro Talavasso UBS vale do sol",
+        "Conj. Hab. Dr. Adail Nunes da Silva",
+        "dashboard",
+        "Emilio Giroto",
+        "francisco romano",
+        "Josephina mantese morcelli pinsetta",
+        "passarela rua doutor jose miguel joao",
+        "R. Alfi Olyntho Cucolicchio - Jardim Vale do Sol,",
+        "R. Angelo Bossine Neto",
+        "R. Antenor Milanezi, 488-538 - Jardim Vale do Sol, Taquaritinga - SP",
+        "R. Cel. Gustavo A de Moraes,",
+        "R. Luís Benaglia,",
+        "R.General Glicerio",
+        "rua dos Domingues-Taquaritinga SP",
+        "rua José Maria gonçalves",
+        "videos mp4",
+        "visita do vice gov do estado a Taquaritinga - SP"
+      ]
+    },
+    {
+      "id": 3,
+      "nome": "Setor 3 - Industrial & Guariroba",
+      "descricao": "Rota otimizada cobrindo 16 locais no Setor Industrial e Guariroba.",
+      "total_locais": 16,
+      "link_gmaps": "https://www.google.com/maps/dir/Guariroba%20distrito%2C%20Taquaritinga%20SP/recapex%20marragni%2C%20Taquaritinga%20SP/Residencias%20atingidas%20vendaval%2C%20Taquaritinga%20-%20SP%2C%20Taquaritinga%20SP/av.Admo%20Lui%2C%20Taquaritinga%20SP/Escola%20Municipal%20Professor%20Modesto%20Bohrer%2C%20Taquaritinga%20SP/general%20Osorio%20%20igreja%20matriz%2C%20Taquaritinga%20SP/Guariroba%20distrito%2C%20Taquaritinga%20SP/Organizado_Por_Endereco%2C%20Taquaritinga%20SP/posto%20de%20saude%20paraiso%20nelson%20sargi%2C%20Taquaritinga%20SP/predio%20da%20Prefeitura%2C%20Taquaritinga%20SP",
+      "locais": [
+        "Guariroba distrito",
+        "recapex marragni",
+        "Residencias atingidas vendaval, Taquaritinga - SP",
+        "av.Admo Lui",
+        "Escola Municipal Professor Modesto Bohrer",
+        "general Osorio  igreja matriz",
+        "Guariroba distrito",
+        "Organizado_Por_Endereco",
+        "posto de saude paraiso nelson sargi",
+        "predio da Prefeitura",
+        "R. Dr. Argidio Prevideli, 2-92 - Taquaritinga, SP",
+        "R.Cesar Rossi- Taquaritinga, SP,  Taquaritinga - SP",
+        "rodoviaria",
+        "rua doutor Jorge Tibiriça",
+        "sp 319",
+        "vila são sebastião"
+      ]
+    }
+  ]
+};
+    let rawLocaisData = initialData.locais || [];
+    let activeFilter = 'todos';
+    let map = null;
+    let markersLayer = null;
+
+    async function loadData() {
+      try {
+        const response = await fetch('dados/locais.json');
+        if (response.ok) {
+          const data = await response.json();
+          rawLocaisData = data.locais || rawLocaisData;
+          updateStats(data);
+        } else {
+          updateStats(initialData);
+        }
+      } catch (err) {
+        updateStats(initialData);
+      }
+      renderGrid();
+      renderRotas();
+      initMap();
+    }
+
+    function updateStats(data) {
+      document.getElementById('stat-total').innerText = data.total_locais || rawLocaisData.length;
+      document.getElementById('stat-concluidos').innerText = data.total_concluidos || 0;
+      document.getElementById('stat-pendentes').innerText = data.total_pendentes || rawLocaisData.length;
+
+      document.getElementById('count-todos').innerText = data.total_locais || rawLocaisData.length;
+      document.getElementById('count-concluidos').innerText = data.total_concluidos || 0;
+      document.getElementById('count-pendentes').innerText = data.total_pendentes || rawLocaisData.length;
+
+      if (data.ultima_atualizacao) {
+        document.getElementById('lbl-atualizacao').innerText = data.ultima_atualizacao;
+      }
+    }
+
+    function getFilteredLocais() {
+      const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+
+      return rawLocaisData.filter(item => {
+        const matchesFilter = (activeFilter === 'todos') || (item.status === activeFilter);
+        const matchesSearch = !searchTerm || 
+          item.nome.toLowerCase().includes(searchTerm) || 
+          item.endereco.toLowerCase().includes(searchTerm) || 
+          item.bairro.toLowerCase().includes(searchTerm);
+
+        return matchesFilter && matchesSearch;
+      });
+    }
+
+    
+    function renderRotas() {
+      const grid = document.getElementById('routesGrid');
+      if (!grid) return;
+      const rotasData = (initialData && initialData.rotas) ? initialData.rotas : [];
+
+      if (rotasData.length === 0) {
+        grid.innerHTML = '<p style="color: var(--text-muted); text-align: center; grid-column: 1/-1;">Nenhuma rota cadastrada.</p>';
+        return;
+      }
+
+      const icons = ['fa-compass', 'fa-truck-ramp-box', 'fa-industry'];
+      const colors = ['var(--primary)', 'var(--secondary)', 'var(--accent)'];
+      const bgColors = ['rgba(2, 132, 199, 0.2)', 'rgba(16, 185, 129, 0.2)', 'rgba(245, 158, 11, 0.2)'];
+
+      grid.innerHTML = rotasData.map((rota, idx) => `
+        <div class="route-card">
+          <div class="route-icon" style="background: ${bgColors[idx % 3]}; color: ${colors[idx % 3]};">
+            <i class="fa-solid ${icons[idx % 3]}"></i>
+          </div>
+          <h3>${escapeHtml(rota.nome)}</h3>
+          <p>${escapeHtml(rota.descricao)}</p>
+          <ul class="route-list">
+            ${(rota.locais || []).slice(0, 4).map(l => `<li><i class="fa-solid fa-circle"></i> ${escapeHtml(l)}</li>`).join('')}
+            ${(rota.locais || []).length > 4 ? `<li><i class="fa-solid fa-circle"></i> + ${rota.locais.length - 4} outros locais no setor</li>` : ''}
+          </ul>
+          <a href="${rota.link_gmaps}" target="_blank" class="btn btn-maps" style="width: 100%;">
+            <i class="fa-solid fa-location-arrow"></i> Abrir Rota (${rota.total_locais} Locais)
+          </a>
+        </div>
+      `).join('');
+    }
+
+    function renderGrid() {
+      const grid = document.getElementById('locaisGrid');
+      const filtered = getFilteredLocais();
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div style="grid-column: 1/-1; text-align: center; padding: 40px; background: var(--card-bg); border-radius: var(--radius); border: 1px solid var(--border-color);">
+            <i class="fa-solid fa-magnifying-glass-slash" style="font-size: 2.5rem; color: var(--text-muted); margin-bottom: 12px;"></i>
+            <p style="color: var(--text-muted); font-size: 1.1rem;">Nenhum local encontrado para os filtros selecionados.</p>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(item => `
+        <div class="local-card" data-id="${item.id}">
+          <div>
+            <div class="local-header">
+              <div class="local-title">${escapeHtml(item.nome)}</div>
+              <span class="status-badge ${item.status}">
+                ${item.status === 'concluido' ? '<i class="fa-solid fa-check"></i> Atendido' : '<i class="fa-solid fa-clock"></i> Pendente'}
+              </span>
+            </div>
+            <div class="local-address">
+              <i class="fa-solid fa-location-dot"></i>
+              <span>${escapeHtml(item.endereco)}</span>
+            </div>
+          </div>
+
+          <div class="local-actions">
+            <a href="${item.linkMaps || '#'}" target="_blank" class="btn btn-maps">
+              <i class="fa-solid fa-map-pin"></i> Google Maps
+            </a>
+            ${item.linkFotos ? `
+              <a href="${item.linkFotos}" target="_blank" class="btn btn-photos">
+                <i class="fa-solid fa-images"></i> Álbuns Fotos
+              </a>
+            ` : `
+              <button class="btn btn-photos disabled" title="Fotos em processamento">
+                <i class="fa-solid fa-image"></i> Sem Fotos
+              </button>
+            `}
+          </div>
+        </div>
+      `).join('');
+
+      updateMapMarkers(filtered);
+    }
+
+    function initMap() {
+      // Taquaritinga SP lat -21.4056, lng -48.5047
+      map = L.map('map').setView([-21.423708, -48.510894], 14);
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap'
+      }).addTo(map);
+
+      markersLayer = L.layerGroup().addTo(map);
+      updateMapMarkers(getFilteredLocais());
+    }
+
+    function updateMapMarkers(locais) {
+      if (!map || !markersLayer) return;
+      markersLayer.clearLayers();
+
+      const bounds = [];
+
+      locais.forEach(item => {
+        if (item.lat && item.lng) {
+          const isConcluido = item.status === 'concluido';
+          
+          // Custom Leaflet CircleMarker
+          const marker = L.circleMarker([item.lat, item.lng], {
+            radius: 8,
+            fillColor: isConcluido ? '#10b981' : '#f59e0b',
+            color: '#ffffff',
+            weight: 2,
+            opacity: 1,
+            fillOpacity: 0.85
+          });
+
+          const popupContent = `
+            <div style="font-family: 'Inter', sans-serif; color: #0f172a; padding: 4px;">
+              <strong style="font-size: 1rem;">${escapeHtml(item.nome)}</strong><br/>
+              <span style="font-size: 0.85rem; color: #475569;">${escapeHtml(item.endereco)}</span><br/>
+              <div style="margin-top: 8px;">
+                <a href="${item.linkMaps}" target="_blank" style="color: #0284c7; font-weight: 600; text-decoration: none;">Abrir Rota no Maps</a>
+              </div>
+            </div>
+          `;
+
+          marker.bindPopup(popupContent);
+          markersLayer.addLayer(marker);
+          bounds.push([item.lat, item.lng]);
+        }
+      });
+
+      if (bounds.length > 0) {
+        map.fitBounds(bounds, { padding: [30, 30] });
+      }
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    // Event Listeners
+    document.getElementById('searchInput').addEventListener('input', renderGrid);
+
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        const target = e.currentTarget;
+        target.classList.add('active');
+        activeFilter = target.getAttribute('data-filter');
+        renderGrid();
+      });
+    });
+
+    // Start App
+    document.addEventListener('DOMContentLoaded', loadData);
+  </script>
+</body>
+</html>
