@@ -183,9 +183,9 @@
             tbody.innerHTML = '';
             
             let ok = 0, pend = 0;
-            dadosLocais.forEach((item, idx) => {
+                        dadosLocais.forEach((item, idx) => {
                 const linkFotos = item.linkFotos || item.fotos || '';
-                const isConcluido = item.status === 'concluido' || (linkFotos !== '');
+                const isConcluido = (item.status === 'concluido') || (linkFotos.trim() !== '');
                 const statusStr = isConcluido ? 'Concluído' : 'Pendente';
                 
                 if (isConcluido) ok++; else pend++;
