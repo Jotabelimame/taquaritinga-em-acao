@@ -147,18 +147,20 @@
     },
     {
       "id": 10,
-      "nome": "av.Calil Jose Dib",
-      "endereco": "av.Calil Jose Dib - Taquaritinga/SP",
+      "nome": "Avenida Calil José Dib",
+      "endereco": "Av. Calil José Dib - Taquaritinga, SP, 15900-000",
       "bairro": "Taquaritinga/SP",
-      "lat": -21.4138,
-      "lng": -48.5222,
+      "lat": -21.407553,
+      "lng": -48.496243,
       "status": "pendente",
-      "linkMaps": "https://www.google.com/maps/search/?api=1&query=av.Calil+Jose+Dib,+av.Calil+Jose+Dib+-+Taquaritinga/SP",
+      "linkMaps": "https://www.google.com/maps/search/?api=1&query=Avenida+Calil+José+Dib+Taquaritinga+SP",
       "linkFotos": "",
       "fotos": "",
       "dataAtendimento": "27/07/2026",
       "exibirNoSite": true,
-      "reservado": false
+      "reservado": false,
+      "maps": "https://www.google.com/maps/search/?api=1&query=Avenida+Calil+José+Dib+Taquaritinga+SP",
+      "rota": "https://www.google.com/maps/dir/?api=1&destination=-21.407553,-48.496243"
     },
     {
       "id": 11,
