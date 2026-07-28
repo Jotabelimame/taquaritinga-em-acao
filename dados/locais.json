@@ -1,8 +1,8 @@
 {
   "ultima_atualizacao": "27/07/2026 22:29:03",
   "total_locais": 66,
-  "total_concluidos": 27,
-  "total_pendentes": 39,
+  "total_concluidos": 28,
+  "total_pendentes": 38,
   "locais": [
     {
       "id": 1,
@@ -224,15 +224,15 @@
     },
     {
       "id": 15,
-      "nome": "av.Paulo Zupanni",
+      "nome": "Avenida Paulo Zuppani",
       "endereco": "av.Paulo Zupanni - Taquaritinga/SP",
       "bairro": "Taquaritinga/SP",
       "lat": -21.3963,
       "lng": -48.5115,
-      "status": "pendente",
+      "status": "concluido",
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=av.Paulo+Zupanni,+av.Paulo+Zupanni+-+Taquaritinga/SP",
-      "linkFotos": "",
-      "fotos": "",
+      "linkFotos": "https://photos.app.goo.gl/6gRJ7JWaZhxB2fvk8",
+      "fotos": "https://photos.app.goo.gl/6gRJ7JWaZhxB2fvk8",
       "dataAtendimento": "27/07/2026",
       "exibirNoSite": true,
       "reservado": false
