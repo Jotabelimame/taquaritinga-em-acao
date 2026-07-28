@@ -658,7 +658,7 @@
 
   <script>
     const initialData = {
-  "ultima_atualizacao": "27/07/2026 14:43:00 (Desduplicado)",
+  "ultima_atualizacao": "27/07/2026 22:29:03",
   "total_locais": 66,
   "total_concluidos": 24,
   "total_pendentes": 42,
@@ -1769,7 +1769,7 @@
 
     async function loadData() {
       try {
-        const response = await fetch('dados/locais.json');
+        const response = await fetch('dados/locais.json?v=1785202143');
         if (response.ok) {
           const data = await response.json();
           rawLocaisData = data.locais || rawLocaisData;
