@@ -1,8 +1,8 @@
 {
   "ultima_atualizacao": "27/07/2026 22:29:03",
   "total_locais": 66,
-  "total_concluidos": 25,
-  "total_pendentes": 41,
+  "total_concluidos": 26,
+  "total_pendentes": 40,
   "locais": [
     {
       "id": 1,
@@ -179,15 +179,15 @@
     },
     {
       "id": 12,
-      "nome": "av.Heitor Alves Gomes",
+      "nome": "Avenida Heitor Alves Gomes",
       "endereco": "Av. Heitor Alves Gomes, s/n",
       "bairro": "Jd. Vale do Sol",
       "lat": -21.419,
       "lng": -48.51,
-      "status": "pendente",
+      "status": "concluido",
       "linkMaps": "https://www.google.com/maps/search/?api=1&query=av.Heitor+Alves+Gomes,+Av.+Heitor+Alves+Gomes,+s/n",
-      "linkFotos": "",
-      "fotos": "",
+      "linkFotos": "https://photos.app.goo.gl/w3Kns8cGNRCysGgMA",
+      "fotos": "https://photos.app.goo.gl/w3Kns8cGNRCysGgMA",
       "dataAtendimento": "27/07/2026",
       "exibirNoSite": true,
       "reservado": false
